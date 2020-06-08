@@ -1,13 +1,28 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <link rel="stylesheet" href="index.css" media="screen" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs/dist/tf.min.js"> </script>
     <script src="meyda.js"> </script>
     <script src="p5.min.js"> </script>
   </head>
-  <body>
-    <h1> MFCCS </h1>
-    <div id="demo"> </div>
+  <body style="background-color:rgb(147, 177, 191);">
+    <div class="App">
+      <header class="App-header">
+        <header class="navbar">
+          <img src="Bertrandt_logo.svg" class="bertrandt-logo" alt="bertrandt_logo" />
+          <button class="btn parallelogram"><i class="fa fa-home"></i></button>
+          <button class="btn parallelogram"><i class="fa fa-home"></i></button>
+          <button class="btn parallelogram"><i class="fa fa-home"></i></button>
+          <button class="btn parallelogram"><i class="fa fa-home"></i></button>
+          <button class="btn parallelogram"><i class="fa fa-home"></i></button>
+        </header>
+      <canvas id="mfcc" width="435" height="435"></canvas>
+      <div id="loading"></div>  
+      <div id="prediction"></div>
+      </header>
+    </div>
     <script src="sketch.js"> </script>
   </body>
 </html>

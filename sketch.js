@@ -7,14 +7,16 @@ var FEATURE_NAME_RMS = 'rms'
 var THRESHOLD_RMS = 0.002 // threshold on rms value
 var MFCC_HISTORY_MAX_LENGTH = 87
 
-var BOX_WIDTH = 10
-var BOX_HEIGHT = 8
+var BOX_WIDTH = 5
+var BOX_HEIGHT = 5
 
 var silence = true
 
 var cur_mfcc = DEFAULT_MFCC_VALUE
 var cur_rms = 0
 var mfcc_history = []
+
+var canvas, ctx
 
 
 function 
@@ -76,9 +78,8 @@ onMicDataCall(features, callback){
 
 
 function setup() {
-    // canvas setup
-    createCanvas(BOX_WIDTH * MFCC_HISTORY_MAX_LENGTH, BOX_HEIGHT * cur_mfcc.length)
-    background(255, 255, 255)
+    canvas = document.getElementById('mfcc')
+    ctx = canvas.getContext('2d')
 
     // create meyda analyzer 
     // and connect to mic source
@@ -99,8 +100,6 @@ function show(features){
 
 
 function draw () {
-    clear ()
-    background ( 255, 255, 255 )
     /* append new mfcc values */
     if ( cur_rms > THRESHOLD_RMS ) {
         //cur_mfcc = cur_mfcc.map(x => x * 100)
@@ -121,34 +120,34 @@ function draw () {
     
     console.log(mfcc_history.length)
     
-    //plot(mfcc_history)
+    plot(mfcc_history)
     if(mfcc_history.length == 87) {
+        document.getElementById("loading").innerHTML = '<img src="loading.gif"> </img>'
         var input = mfcc_history.slice()
         tf.loadLayersModel('https://www.adrianreimer.com/model.json').then(model => {  
             var stacked = tf.stack([input, input, input], axis=-1)
             var reshaped = stacked.reshape([1, 87, 87, 3])
-            document.getElementById("demo").innerHTML = model.predict(reshaped)
+            document.getElementById("loading").innerHTML = ''
+            document.getElementById("prediction").innerHTML = model.predict(reshaped)
         });
     mfcc_history = []
     }	
 }
 
 
-let plot = (data) => {
+function plot(data) {
     for(let i = 0; i < data.length; i++ ) {
         for(let j = 0; j < data[i].length; j++ ) {
             let color_strength = data[i][j] * 100
 
             // setting color
-            if ( data [i] [j] >= 0 )
-                fill ( 100, color_strength, 100 )
+            if (data [i] [j] >= 0)
+                ctx.fillStyle = "rgb(100, " + color_strength + ", 100)"
             else
-                fill( 100, 100, - color_strength )
-            
-            noStroke();
-            
+                ctx.fillStyle = "rgb(100, 100," + (- color_strength) + ")"
+
             // drawing the rectangle
-            rect(i * BOX_WIDTH, j * BOX_HEIGHT, BOX_WIDTH, BOX_HEIGHT)
+            ctx.fillRect(i * BOX_WIDTH, j * BOX_HEIGHT, BOX_WIDTH, BOX_HEIGHT)
         }
     }
 }
