@@ -1,10 +1,27 @@
-// setup init variables
+// load model
+var model
+tf.loadLayersModel('https://www.adrianreimer.com/model.json').then(loaded_model=>{
+	model = loaded_model
+})
+
+var label_dict = {
+    0: "Angry",
+    1: "Disgusted",
+    2: "Scared",
+    3: "Happy",
+    4: "Neutral",
+    5: "Sad",
+    6: "Surprised",
+    7: "Laughter",
+    8: "PosedLaughter",
+    9: "SpeechLaughter",
+}
 
 var DEFAULT_MFCC_VALUE = new Array(87)
 var FEATURE_NAME_MFCC = 'mfcc'
 var FEATURE_NAME_RMS = 'rms'
 
-var THRESHOLD_RMS = 0.002 // threshold on rms value
+var THRESHOLD_RMS = 0.001 // threshold on rms value
 var MFCC_HISTORY_MAX_LENGTH = 87
 
 var BOX_WIDTH = 5
@@ -18,24 +35,43 @@ var mfcc_history = []
 
 var canvas, ctx
 
+var red_color = 150
+var green_color = 144
+var blue_color = 120
 
-function 
+
+function
+indexOfMax(arr) {
+    if(arr.length == 0) {
+        return -1
+    }
+    
+    var max = arr[0]
+    var max_idx = 0;
+    
+    for(var i = 0; i < arr.length; i++) {
+        if(arr[i] > max) {
+            max_idx = i;
+            max = arr[i];
+        }
+    }
+    return max_idx
+}
+
 /* get new audio 
 context object */
-createAudioCtx(){
+function createAudioCtx() {
     let AudioContext = window.AudioContext || window.webkitAudioContext;
     return new AudioContext();
 }
 
-
-function
 /* create microphone
 audio input source from 
 audio context */
-createMicSrcFrom(audioCtx){
-    /* get microphone access */
-    return new Promise((resolve, reject)=>{
-        /* only audio */
+function createMicSrcFrom(audioCtx) {
+    // get microphone access
+    return new Promise((resolve, reject)=> {
+        // only audio
         let constraints = {audio:true, video:false}
 
         navigator.mediaDevices.getUserMedia(constraints)
@@ -48,14 +84,11 @@ createMicSrcFrom(audioCtx){
     })
 }
 
-
-
-function
 /* call given function
 on new microphone analyser
 data */
-onMicDataCall(features, callback){
-    return new Promise((resolve, reject)=>{
+function onMicDataCall(features, callback) {
+    return new Promise((resolve, reject)=> {
         let audioCtx = createAudioCtx()
 
         createMicSrcFrom(audioCtx)
@@ -73,7 +106,6 @@ onMicDataCall(features, callback){
             reject(err)
         })
     })
-    
 }
 
 
@@ -91,63 +123,56 @@ function setup() {
     })
 }
 
-function show(features){
+function show(features) {
     // update spectral data size
     cur_mfcc = features[FEATURE_NAME_MFCC]
     cur_rms = features[FEATURE_NAME_RMS]
 }
 
-
-
-function draw () {
-    /* append new mfcc values */
-    if ( cur_rms > THRESHOLD_RMS ) {
-        //cur_mfcc = cur_mfcc.map(x => x * 100)
-        mfcc_history.push ( cur_mfcc )
+function draw() {
+    // append new mfcc values
+    if(cur_rms > THRESHOLD_RMS) {
+        mfcc_history.push(cur_mfcc)
         silence = false
-    } else {
-        // push an empty mfcc value 
-        // to signify end of utterance
-        if ( silence == false ) {
-            mfcc_history.push(DEFAULT_MFCC_VALUE)
-            silence = true
-        }
     }
-
-    // only store the last n 
-    if(mfcc_history.length > MFCC_HISTORY_MAX_LENGTH)
-        mfcc_history.splice(0,1)
-    
-    console.log(mfcc_history.length)
-    
+    // plot new mfcc snippet
     plot(mfcc_history)
-    if(mfcc_history.length == 87) {
-        document.getElementById("loading").innerHTML = '<img src="loading.gif"> </img>'
+    // predict output
+    if(mfcc_history.length == MFCC_HISTORY_MAX_LENGTH) {
         var input = mfcc_history.slice()
-        tf.loadLayersModel('https://www.adrianreimer.com/model.json').then(model => {  
-            var stacked = tf.stack([input, input, input], axis=-1)
-            var reshaped = stacked.reshape([1, 87, 87, 3])
-            document.getElementById("loading").innerHTML = ''
-            document.getElementById("prediction").innerHTML = model.predict(reshaped)
-        });
-    mfcc_history = []
+        mfcc_history = []
+        var stacked = tf.stack([input, input, input], axis=-1)
+        var reshaped = stacked.reshape([1, 87, 87, 3])
+        var model_pred = model.predict(reshaped) 
+        document.getElementById("prediction").innerHTML = label_dict[indexOfMax(model_pred)]
     }	
 }
 
-
 function plot(data) {
-    for(let i = 0; i < data.length; i++ ) {
-        for(let j = 0; j < data[i].length; j++ ) {
-            let color_strength = data[i][j] * 100
-
+    if(data.length) {
+        var x = data.length - 1
+        for(let y = 0; y < data[x].length; y++ ) {
+            let color_strength = data[x][y]
             // setting color
-            if (data [i] [j] >= 0)
-                ctx.fillStyle = "rgb(100, " + color_strength + ", 100)"
-            else
-                ctx.fillStyle = "rgb(100, 100," + (- color_strength) + ")"
-
+            if (data [x] [y] >= -300) {
+                ctx.fillStyle = "rgb(255, " +
+                                (green_color + color_strength) +
+                                "," +
+                                (blue_color + color_strength) +
+                                ")"
+            } else {
+                ctx.fillStyle = "rgb(" +
+                                (red_color + color_strength) +
+                                "," +
+                                (green_color + color_strength) +
+                                ", 255)"
+            }
             // drawing the rectangle
-            ctx.fillRect(i * BOX_WIDTH, j * BOX_HEIGHT, BOX_WIDTH, BOX_HEIGHT)
+            ctx.fillRect(x * BOX_WIDTH,
+                         y * BOX_HEIGHT,
+                         BOX_WIDTH,
+                         BOX_HEIGHT)
         }
     }
 }
+

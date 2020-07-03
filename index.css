@@ -9,7 +9,7 @@
     flex-direction: column;
     align-items: top;
     justify-content: top;
-    font-size: calc(10px + 2vmin);
+    font-size: calc(2vmin);
     color: white;
 }
 
@@ -18,9 +18,9 @@
     width: screen;
     background-color: rgb(60, 90, 105);
     color: whitesmoke;
-    margin-bottom: 15px;
+    margin-bottom: 1vmin;
     text-align: center;
-    font-size: 30px;
+    font-size: 2.5vmin;
     display: flex;
     justify-content: top;
     align-items: center;
@@ -29,9 +29,11 @@
 .btn {
     height: 10vmin;
     width: 10vmin;
+    margin: 0.3vmin;
     background:rgb(68, 119, 141);
     box-sizing: unset;
     border: hidden;
+    font-size: 2.5vmin;
 }
   
 .btn:hover {
@@ -43,14 +45,20 @@
     transform: skew(-25deg);
 }
   
-.fa-home{
-    position: relative;  
+.fa-home{  
     transform: skew(25deg);
-    float: center;
-    display: flex;
+    text-align: center;
     justify-content: center;
-    align-items: center;
-    font-size: 2.5vmin;
+    font-size: 5vmin;
+    size: fixed;
+}
+
+.fa-book{
+    transform: skew(25deg);
+    text-align: center;
+    justify-content: center;
+    font-size: 5vmin;
+    size: fixed;
 }
 
 .bertrandt-logo {
