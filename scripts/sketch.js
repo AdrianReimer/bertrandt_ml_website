@@ -20,6 +20,7 @@ var label_dict = {
 var DEFAULT_MFCC_VALUE = new Array(261)
 var FEATURE_NAME_MFCC = 'mfcc'
 var FEATURE_NAME_RMS = 'rms'
+var FEATURE_NAME_Buffer = 'buffer'
 
 var THRESHOLD_RMS = 0.001 // threshold on rms value
 var MFCC_HISTORY_MAX_LENGTH = 261
@@ -31,6 +32,7 @@ var silence = true
 
 var cur_mfcc = DEFAULT_MFCC_VALUE
 var cur_rms = 0
+var cur_buffer = 0
 var mfcc_history = []
 
 var canvas, ctx
@@ -110,12 +112,14 @@ function onMicDataCall(features, callback) {
 
 
 function setup() {
-    canvas = document.getElementById('mfcc')
-    ctx = canvas.getContext('2d')
+    buffer_canvas = document.getElementById('buffer')
+    buffer_ctx = buffer_canvas.getContext('2d')
+    mfcc_canvas = document.getElementById('mfcc')
+    mfcc_ctx = mfcc_canvas.getContext('2d')
 
     // create meyda analyzer 
     // and connect to mic source
-    onMicDataCall([FEATURE_NAME_MFCC, FEATURE_NAME_RMS], show)
+    onMicDataCall([FEATURE_NAME_MFCC, FEATURE_NAME_RMS, FEATURE_NAME_Buffer], show)
     .then((meydaAnalyzer) => {
         meydaAnalyzer.start()
     }).catch((err)=>{
@@ -127,6 +131,7 @@ function show(features) {
     // update spectral data size
     cur_mfcc = features[FEATURE_NAME_MFCC]
     cur_rms = features[FEATURE_NAME_RMS]
+    cur_buffer = features[FEATURE_NAME_Buffer]
 }
 
 function draw() {
@@ -136,7 +141,8 @@ function draw() {
         silence = false
     }
     // plot new mfcc snippet
-    plot(mfcc_history)
+    plot_mfcc()
+    plot_buffer()
     // predict output
     if(mfcc_history.length == MFCC_HISTORY_MAX_LENGTH) {
         var input = mfcc_history.slice()
@@ -148,27 +154,27 @@ function draw() {
     }	
 }
 
-function plot(data) {
-    if(data.length) {
-        var x = data.length - 1
-        for(let y = 0; y < data[x].length; y++ ) {
-            let color_strength = data[x][y]
+function plot_mfcc() {
+    if(mfcc_history.length) {
+        var x = mfcc_history.length - 1
+        for(let y = 0; y < mfcc_history[x].length; y++ ) {
+            let color_strength = mfcc_history[x][y]
             // setting color
-            if (data [x] [y] >= -300) {
-                ctx.fillStyle = "rgb(255, " +
+            if (mfcc_history[x][y] >= -300) {
+                mfcc_ctx.fillStyle = "rgb(255, " +
                                 (green_color + color_strength) +
                                 "," +
                                 (blue_color + color_strength) +
                                 ")"
             } else {
-                ctx.fillStyle = "rgb(" +
+                mfcc_ctx.fillStyle = "rgb(" +
                                 (red_color + color_strength) +
                                 "," +
                                 (green_color + color_strength) +
                                 ", 255)"
             }
             // drawing the rectangle
-            ctx.fillRect(x * BOX_WIDTH,
+            mfcc_ctx.fillRect(x * BOX_WIDTH,
                          y * BOX_HEIGHT,
                          BOX_WIDTH,
                          BOX_HEIGHT)
@@ -176,3 +182,49 @@ function plot(data) {
     }
 }
 
+function plot_buffer() {
+    if(cur_buffer.length) {
+        buffer_ctx.clearRect(0, 0, buffer_canvas.width, buffer_canvas.height);
+        var buffer_idx = 0
+        for(let i = 0; i < cur_buffer.length; i++ ) {
+            let color_strength = cur_buffer[i] * 500
+            // setting color
+            buffer_ctx.fillStyle = "rgb(30, 30, 30)"
+            // drawing the rectangle
+            buffer_ctx.fillRect(buffer_idx,
+                        color_strength + 100,
+                         1.5,
+                         1.5)     
+            buffer_idx = buffer_idx + 1      
+        }
+    }
+}
+
+function full_plot_mfcc() {
+    if(mfcc_history.length) {
+        for(let x = 0; x < mfcc_history.length; x++ ) {
+            for(let y = 0; y < mfcc_history[x].length; y++ ) {
+                let color_strength = mfcc_history[x][y]
+                // setting color
+                if (mfcc_history[x][y] >= -300) {
+                    mfcc_ctx.fillStyle = "rgb(255, " +
+                                    (green_color + color_strength) +
+                                    "," +
+                                    (blue_color + color_strength) +
+                                    ")"
+                } else {
+                    mfcc_ctx.fillStyle = "rgb(" +
+                                    (red_color + color_strength) +
+                                    "," +
+                                    (green_color + color_strength) +
+                                    ", 255)"
+                }
+                // drawing the rectangle
+                mfcc_ctx.fillRect(x * BOX_WIDTH,
+                                y * BOX_HEIGHT,
+                                BOX_WIDTH,
+                                BOX_HEIGHT)
+            }
+        }
+    }
+}

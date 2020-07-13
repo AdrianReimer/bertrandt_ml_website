@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" href="index.css" media="screen" />
+    <link rel="stylesheet" href="styles/index.css" media="screen" />
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs/dist/tf.min.js"> </script>
     <script src="https://cdn.jsdelivr.net/gh/nicolaspanel/numjs@0.15.1/dist/numjs.min.js"> </script>
@@ -11,32 +12,58 @@
 	db.info().then((info) => { console.log(info); })
     </script>
     <script>
+        function toggle_buffer() {
+            var mfcc_cv_h = document.getElementById("buffer").height;
+            if(mfcc_cv_h == 0) {
+                document.getElementById("buffer").height = 200;
+                document.getElementById("buffer-info").style.width = '100%';
+                plot_buffer();
+            } else {
+                document.getElementById("buffer").height = 0;
+                document.getElementById("buffer-info").style.width = '25vmin';
+            }
+        }
+
         function toggle_mfcc() {
             var mfcc_cv_h = document.getElementById("mfcc").height;
-            console.log(mfcc_cv_h);
             if(mfcc_cv_h == 0) {
                 document.getElementById("mfcc").height = 200;
+                document.getElementById("mfcc-info").style.width = '100%';
+                full_plot_mfcc();
             } else {
-                document.getElementById("mfcc").height = 0
+                document.getElementById("mfcc").height = 0;
+                document.getElementById("mfcc-info").style.width = '25vmin';
             }
         }
     </script>
-    <script src="meyda.js"> </script>
-    <script src="p5.min.js"> </script>
+    <script src="scripts/meyda.js"> </script>
+    <script src="scripts/p5.min.js"> </script>
   </head>
   <body style="background-color:rgb(147, 177, 191);">
     <div class="App">
-      <header class="App-header">
+      <header class="App-header"></header>
         <header class="navbar">
-          <img src="Bertrandt_logo.svg" class="bertrandt-logo" alt="bertrandt_logo" />
+          <img src="images/Bertrandt_logo.svg" class="bertrandt-logo" alt="bertrandt_logo"/>
           <button class="btn parallelogram"><i class="fa fa-home fa-fw"></i></button>
           <button class="btn parallelogram"><i class="fa fa-book fa-fw"></i></button>
         </header>
-      <span style=font-size:30px;cursor:pointer" onclick="toggle_mfcc()">&#9776; MFCC</span>
-      <canvas id="mfcc" width="1305" height="200"></canvas>  
+      <div class="buffer-bar">
+        <button class="btn-mb" onclick="toggle_buffer()">+</button>
+        <img src="images/text_buffer.svg" class="bar-image"/>
+      </div>
+      <div class="buffer-info" id="buffer-info">
+        <canvas id="buffer" width="512" height="200"></canvas>    
+      </div>
+      <div class="mfcc-bar">
+        <button class="btn-mb" onclick="toggle_mfcc()">+</button>
+        <img src="images/text_mfcc.svg" class="bar-image"/>
+      </div>
+      <div class="mfcc-info" id="mfcc-info">
+        <canvas id="mfcc" width="1305" height="200"></canvas>    
+      </div>
       <div id="prediction"></div>
       </header>
     </div>
-    <script src="sketch.js"> </script>
+    <script src="scripts/sketch.js"> </script>
   </body>
 </html>

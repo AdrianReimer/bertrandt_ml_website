@@ -1,8 +1,7 @@
 .App {
     text-align: top;
 }
-  
-  
+
 .App-header {
     background-color: rgb(147, 177, 191); 
     display: flex;
@@ -15,15 +14,66 @@
 
 .navbar {
     height: 10vmin;
-    width: screen;
+    width: 150%;
     background-color: rgb(60, 90, 105);
     color: whitesmoke;
-    margin-bottom: 2vmin;
-    text-align: center;
-    font-size: 2.5vmin;
     display: flex;
     justify-content: top;
     align-items: center;
+    margin-bottom: 2%;
+}
+
+.buffer-bar {
+    font-size: calc(2vmin);
+    height: 5vmin;
+    width: 25vmin;
+    background-color: rgb(60, 90, 105);
+    color: whitesmoke;
+    display: flex;
+    justify-content: top;
+    align-items: center;
+    border-top-right-radius: 5vmin;
+}
+
+.buffer-info {
+    background-color: rgb(60, 90, 105);
+    width: 100%;
+    padding: 1vmin;
+    padding-bottom: 0.5vmin;
+    margin-bottom: 1vmin;
+    justify-content: center;
+    align-items: center;
+}
+
+.mfcc-bar {
+    font-size: calc(2vmin);
+    height: 5vmin;
+    width: 25vmin;
+    background-color: rgb(60, 90, 105);
+    color: whitesmoke;
+    display: flex;
+    justify-content: top;
+    align-items: center;
+    border-top-right-radius: 5vmin;
+}
+
+.mfcc-info {
+    background-color: rgb(60, 90, 105);
+    width: 100%;
+    padding: 1vmin;
+    padding-bottom: 0.5vmin;
+}
+
+.btn-mb {
+    transition-duration: 0.15s;
+    height: 5vmin;
+    width: 5vmin;
+    margin: 0vmin;
+    padding: 0vmin;
+    background:rgb(68, 119, 141);
+    border: hidden;
+    outline: none;
+    font-size: 3vmin;
 }
 
 .btn {
@@ -34,6 +84,7 @@
     padding: 0vmin;
     background:rgb(68, 119, 141);
     border: hidden;
+    outline: none;
     font-size: 3vmin;
 }
   
@@ -75,5 +126,11 @@
     height: 3vmin;
     padding-left: 2vmin;
     padding-right: 6vmin;
+    float: left;
+}
+
+.bar-image {
+    height: 5vmin;
+    padding-left: 0vmin;
     float: left;
 }
