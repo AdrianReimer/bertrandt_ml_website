@@ -5,6 +5,22 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs/dist/tf.min.js"> </script>
     <script src="https://cdn.jsdelivr.net/gh/nicolaspanel/numjs@0.15.1/dist/numjs.min.js"> </script>
+    <script src="https://cdn.jsdelivr.net/npm/pouchdb@7.2.1/dist/pouchdb.min.js"> </script>
+    <script>
+	const db = new PouchDB('users');
+	db.info().then((info) => { console.log(info); })
+    </script>
+    <script>
+        function toggle_mfcc() {
+            var mfcc_cv_h = document.getElementById("mfcc").height;
+            console.log(mfcc_cv_h);
+            if(mfcc_cv_h == 0) {
+                document.getElementById("mfcc").height = 200;
+            } else {
+                document.getElementById("mfcc").height = 0
+            }
+        }
+    </script>
     <script src="meyda.js"> </script>
     <script src="p5.min.js"> </script>
   </head>
@@ -16,7 +32,8 @@
           <button class="btn parallelogram"><i class="fa fa-home fa-fw"></i></button>
           <button class="btn parallelogram"><i class="fa fa-book fa-fw"></i></button>
         </header>
-      <canvas id="mfcc" width="435" height="435"></canvas>  
+      <span style=font-size:30px;cursor:pointer" onclick="toggle_mfcc()">&#9776; MFCC</span>
+      <canvas id="mfcc" width="1305" height="200"></canvas>  
       <div id="prediction"></div>
       </header>
     </div>

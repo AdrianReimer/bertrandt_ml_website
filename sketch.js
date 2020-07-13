@@ -5,24 +5,24 @@ tf.loadLayersModel('https://www.adrianreimer.com/model.json').then(loaded_model=
 })
 
 var label_dict = {
-    0: "Angry",
-    1: "Disgusted",
-    2: "Scared",
-    3: "Happy",
-    4: "Neutral",
-    5: "Sad",
-    6: "Surprised",
+    "0": "Angry",
+    "1": "Disgusted",
+    "2": "Scared",
+    "3": "Happy",
+    "4": "Neutral",
+    "5": "Sad",
+    "6": "Surprised",
     7: "Laughter",
     8: "PosedLaughter",
     9: "SpeechLaughter",
 }
 
-var DEFAULT_MFCC_VALUE = new Array(87)
+var DEFAULT_MFCC_VALUE = new Array(261)
 var FEATURE_NAME_MFCC = 'mfcc'
 var FEATURE_NAME_RMS = 'rms'
 
 var THRESHOLD_RMS = 0.001 // threshold on rms value
-var MFCC_HISTORY_MAX_LENGTH = 87
+var MFCC_HISTORY_MAX_LENGTH = 261
 
 var BOX_WIDTH = 5
 var BOX_HEIGHT = 5
@@ -99,7 +99,7 @@ function onMicDataCall(features, callback) {
                 'bufferSize':512,
                 'featureExtractors':features,
                 'callback':callback,
-		'numberOfMFCCCoefficients': 87
+		'numberOfMFCCCoefficients': 40
             })
             resolve(analyzer)
         }).catch((err)=>{
@@ -142,9 +142,9 @@ function draw() {
         var input = mfcc_history.slice()
         mfcc_history = []
         var stacked = tf.stack([input, input, input], axis=-1)
-        var reshaped = stacked.reshape([1, 87, 87, 3])
+        var reshaped = stacked.reshape([1, 40, 261, 3])
         var model_pred = model.predict(reshaped) 
-        document.getElementById("prediction").innerHTML = label_dict[indexOfMax(model_pred)]
+        document.getElementById("prediction").innerHTML = label_dict[tf.argMax(model_pred, axis=1).dataSync()]
     }	
 }
 

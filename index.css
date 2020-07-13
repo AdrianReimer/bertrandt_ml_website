@@ -18,7 +18,7 @@
     width: screen;
     background-color: rgb(60, 90, 105);
     color: whitesmoke;
-    margin-bottom: 1vmin;
+    margin-bottom: 2vmin;
     text-align: center;
     font-size: 2.5vmin;
     display: flex;
@@ -27,20 +27,30 @@
 }
 
 .btn {
+    transition-duration: 0.15s;
     height: 10vmin;
     width: 10vmin;
     margin: 0.3vmin;
+    padding: 0vmin;
     background:rgb(68, 119, 141);
-    box-sizing: unset;
     border: hidden;
-    font-size: 2.5vmin;
+    font-size: 3vmin;
 }
   
 .btn:hover {
     transition-duration: 0.3s;  
     background: rgb(88, 139, 161);
 }
-  
+ 
+.btn:focus {
+    transition-duration: 0.15s;
+    border-top: 1vmin solid rgb(250,250,250);
+}
+
+.btn:active {
+    transform: skew(-25deg);
+    border-top: 1vmin solid rgb(250, 250, 250);
+} 
 .parallelogram{
     transform: skew(-25deg);
 }
@@ -49,7 +59,7 @@
     transform: skew(25deg);
     text-align: center;
     justify-content: center;
-    font-size: 5vmin;
+    font-size: 8vmin;
     size: fixed;
 }
 
@@ -57,7 +67,7 @@
     transform: skew(25deg);
     text-align: center;
     justify-content: center;
-    font-size: 5vmin;
+    font-size: 8vmin;
     size: fixed;
 }
 

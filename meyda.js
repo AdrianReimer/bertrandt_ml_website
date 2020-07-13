@@ -2193,7 +2193,7 @@ var dct = __webpack_require__(/*! dct */ "./node_modules/dct/index.js");
     throw new TypeError('Valid melFilterBank is required to generate MFCC');
   }
 
-  var numberOfMFCCCoefficients = 87; // Tutorial from:
+  var numberOfMFCCCoefficients = 40; // Tutorial from:
   // http://practicalcryptography.com/miscellaneous/machine-learning
   // /guide-mel-frequency-cepstral-coefficients-mfccs/
 
