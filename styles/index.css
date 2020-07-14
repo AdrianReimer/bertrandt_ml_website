@@ -3,40 +3,46 @@
 }
 
 .App-header {
-    background-color: rgb(147, 177, 191); 
     display: flex;
     flex-direction: column;
     align-items: top;
     justify-content: top;
     font-size: calc(2vmin);
-    color: white;
 }
 
 .navbar {
-    height: 10vmin;
+    height: 15vmin;
     width: 150%;
-    background-color: rgb(60, 90, 105);
+    bottom: 0;
+    position: fixed;
+    background-color: rgb(233, 233, 233);
     color: whitesmoke;
     display: flex;
     justify-content: top;
     align-items: center;
-    margin-bottom: 2%;
+    border-top: 0.5vmin solid rgb(216, 216, 216);
+    margin-bottom: 0%;
 }
 
-.buffer-bar {
+#buffer-bar {
+    position: absolute;
+    overflow: hidden;
     font-size: calc(2vmin);
-    height: 5vmin;
-    width: 25vmin;
-    background-color: rgb(60, 90, 105);
+    height: 23vmin;
+    width: 50%;
+    background-color: rgb(40, 40, 40);
     color: whitesmoke;
+}
+
+#buffer_mover {
+    cursor: move;
     display: flex;
-    justify-content: top;
     align-items: center;
-    border-top-right-radius: 5vmin;
+    justify-content: center;
 }
 
 .buffer-info {
-    background-color: rgb(60, 90, 105);
+    background-color: rgb(200, 200, 200);
     width: 100%;
     padding: 1vmin;
     padding-bottom: 0.5vmin;
@@ -45,22 +51,28 @@
     align-items: center;
 }
 
-.mfcc-bar {
+#mfcc-bar {
+    position: absolute;
+    overflow: hidden;
     font-size: calc(2vmin);
-    height: 5vmin;
-    width: 25vmin;
-    background-color: rgb(60, 90, 105);
+    height: 23vmin;
+    width: 50%;
+    background-color: rgb(40, 40, 40);
     color: whitesmoke;
+}
+
+#mfcc_mover {
+    cursor: move;
     display: flex;
-    justify-content: top;
     align-items: center;
-    border-top-right-radius: 5vmin;
+    justify-content: center;
 }
 
 .mfcc-info {
-    background-color: rgb(60, 90, 105);
+    background-color: rgb(200, 200, 200);
+    display: flex;
+    height: 23vmin;
     width: 100%;
-    padding: 1vmin;
     padding-bottom: 0.5vmin;
 }
 
@@ -78,11 +90,11 @@
 
 .btn {
     transition-duration: 0.15s;
-    height: 10vmin;
-    width: 10vmin;
-    margin: 0.3vmin;
+    height: 14.5vmin;
+    width: 14.5vmin;
+    margin: 5.5vmax;
     padding: 0vmin;
-    background:rgb(68, 119, 141);
+    background:rgba(233, 233, 233);
     border: hidden;
     outline: none;
     font-size: 3vmin;
@@ -90,37 +102,54 @@
   
 .btn:hover {
     transition-duration: 0.3s;  
-    background: rgb(88, 139, 161);
-}
- 
-.btn:focus {
-    transition-duration: 0.15s;
-    border-top: 1vmin solid rgb(250,250,250);
+    filter: opacity(50%);
+    -webkit-filter: opacity(50%);
 }
 
-.btn:active {
-    transform: skew(-25deg);
-    border-top: 1vmin solid rgb(250, 250, 250);
-} 
-.parallelogram{
-    transform: skew(-25deg);
+.fa {
+    color: black !important;
 }
-  
-.fa-home{  
-    transform: skew(25deg);
+
+.fa-home {  
+    color:black;
     text-align: center;
     justify-content: center;
     font-size: 8vmin;
     size: fixed;
 }
 
-.fa-book{
-    transform: skew(25deg);
+.fa-search{
+    color:black;
     text-align: center;
     justify-content: center;
     font-size: 8vmin;
     size: fixed;
 }
+
+.fa-pie-chart{
+    color:black;
+    text-align: center;
+    justify-content: center;
+    font-size: 8vmin;
+    size: fixed;
+}
+
+.fa-question{
+    color:black;
+    text-align: center;
+    justify-content: center;
+    font-size: 8vmin;
+    size: fixed;
+}
+
+.fa-user{
+    color:black;
+    text-align: center;
+    justify-content: center;
+    font-size: 8vmin;
+    size: fixed;
+}
+
 
 .bertrandt-logo {
     height: 3vmin;

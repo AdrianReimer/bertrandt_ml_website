@@ -33,37 +33,39 @@
             } else {
                 document.getElementById("mfcc").height = 0;
                 document.getElementById("mfcc-info").style.width = '25vmin';
+                console.log(document.getElementById("homebtn").attributes);
             }
         }
     </script>
     <script src="scripts/meyda.js"> </script>
     <script src="scripts/p5.min.js"> </script>
   </head>
-  <body style="background-color:rgb(147, 177, 191);">
+  <body style="background-color:rgba(240, 240, 240);">
     <div class="App">
       <header class="App-header"></header>
         <header class="navbar">
-          <img src="images/Bertrandt_logo.svg" class="bertrandt-logo" alt="bertrandt_logo"/>
-          <button class="btn parallelogram"><i class="fa fa-home fa-fw"></i></button>
-          <button class="btn parallelogram"><i class="fa fa-book fa-fw"></i></button>
+          <button class="btn" id="home_btn"><i class="fa fa-home fa-fw"></i></button>
+          <button class="btn" id="search_btn"><i class="fa fa-search fa-fw"></i></button>
+          <button class="btn" id="chart_btn"><i class="fa fa-pie-chart fa-fw"></i></button>
+          <button class="btn" id="help_btn"><i class="fa fa-question fa-fw"></i></button>
+          <button class="btn" id="user_btn"><i class="fa fa-user fa-fw"></i></button>
         </header>
-      <div class="buffer-bar">
-        <button class="btn-mb" onclick="toggle_buffer()">+</button>
-        <img src="images/text_buffer.svg" class="bar-image"/>
+        <div id="buffer-bar">
+          <div id="buffer_mover"> Raw audio </div>
+          <div class="buffer-info" id="buffer-info">
+            <canvas id="buffer" width="1305" height="200"></canvas>    
+          </div>
+        </div>
+        <div id="mfcc-bar">
+          <div id="mfcc_mover"> MFCC </div>
+          <div class="mfcc-info" id="mfcc-info">
+            <canvas id="mfcc" width="1305" height="200"></canvas>    
+          </div>
+        </div>
+        <div id="prediction"></div>
+        </header>
       </div>
-      <div class="buffer-info" id="buffer-info">
-        <canvas id="buffer" width="512" height="200"></canvas>    
-      </div>
-      <div class="mfcc-bar">
-        <button class="btn-mb" onclick="toggle_mfcc()">+</button>
-        <img src="images/text_mfcc.svg" class="bar-image"/>
-      </div>
-      <div class="mfcc-info" id="mfcc-info">
-        <canvas id="mfcc" width="1305" height="200"></canvas>    
-      </div>
-      <div id="prediction"></div>
-      </header>
-    </div>
     <script src="scripts/sketch.js"> </script>
+    <script src="scripts/drag.js"> </script>
   </body>
 </html>
