@@ -193,7 +193,7 @@ function plot_buffer() {
             // drawing the rectangle
             buffer_ctx.fillRect(buffer_idx,
                         color_strength + 100,
-                         1.5,
+                         5,
                          1.5)     
             buffer_idx = buffer_idx + 1      
         }

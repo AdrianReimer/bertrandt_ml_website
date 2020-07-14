@@ -24,7 +24,7 @@ function dragElement(elmnt) {
   }
 
   function elementDrag(e) {
-    var browserZoomLevel = window.devicePixelRatio * 1.72;
+    var browserZoomLevel = window.devicePixelRatio * 1.79;
     var browserZoomLevel2 = window.devicePixelRatio * 2;
     tmp_screenX = screen.height / browserZoomLevel;
     tmp_screenY = screen.width / browserZoomLevel2;
