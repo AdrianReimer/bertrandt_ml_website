@@ -6,6 +6,8 @@
 </template>
 
 <script>
+import 'p5';
+import 'meyda';
 import TheNavbar from './components/TheNavbar.vue';
 
 export default {

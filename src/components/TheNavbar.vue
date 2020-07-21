@@ -4,7 +4,7 @@
         <i class="fa fa-home fa-fw"></i></button>
         <button @click="$router.push('/trigger')" class="btn" id="triggerBtn">
         <i class="fa fa-search fa-fw"></i></button>
-        <button @click="$router.push('/statistics')" class="btn" id="chartBtn">
+        <button @click="$router.push('/statistic')" class="btn" id="chartBtn">
         <i class="fa fa-pie-chart fa-fw"></i></button>
         <button @click="$router.push('/help')" class="btn" id="helpBtn">
         <i class="fa fa-question fa-fw"></i></button>
