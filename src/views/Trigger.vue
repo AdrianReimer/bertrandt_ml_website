@@ -110,6 +110,7 @@ export default {
     // load trigger sound volume
     this.$pouch.get('triggerSoundVolume', {}, 'trigger').then((doc) => {
       this.triggerSoundVolume = doc.value;
+      document.getElementById(this.selectedTriggerSound).volume = doc.value / 100;
     }).catch((err) => {
       console.error(err);
     });
@@ -118,6 +119,7 @@ export default {
     saveTriggerSound() {
       this.$pouch.get('selectedTriggerSound', {}, 'trigger').then((doc) => {
         doc.value = this.selectedTriggerSound;
+        this.playTriggerSound();
         return this.$pouch.put(doc, {}, 'trigger');
       }).catch(() => {
         const doc = {
@@ -130,7 +132,6 @@ export default {
           console.error(err);
         });
       });
-      this.playTriggerSound();
     },
     saveTriggerLabel() {
       this.$pouch.get('selectedTriggerLabel', {}, 'trigger').then((doc) => {
@@ -179,8 +180,10 @@ export default {
           console.error(err);
         });
       });
+      document.getElementById(this.selectedTriggerSound).volume = this.triggerSoundVolume / 100;
     },
     playTriggerSound() {
+      document.getElementById(this.selectedTriggerSound).volume = this.triggerSoundVolume / 100;
       const audio = document.getElementById(this.selectedTriggerSound);
       audio.play();
     },

@@ -10,33 +10,34 @@
 import Chart from 'chart.js';
 
 export default {
+  data() {
+    return {
+      labels: ['Angry', 'Disgusted', 'Scared', 'Happy', 'Neutral', 'Sad', 'Surprised', 'Calm'],
+      data: [0, 0, 0, 0, 0, 0, 0, 0],
+    };
+  },
+  methods: {
+    loadData() {
+      for (let i = 0; i < this.labels.length; i += 1) {
+        this.$pouch.get(this.labels[i], {}, 'home').then((doc) => {
+          this.data[i] = doc.value;
+        }).catch((err) => {
+          console.error(err);
+        });
+      }
+    },
+  },
   mounted() {
+    this.loadData();
     let myChart = document.getElementById('chart1').getContext('2d');
     console.log(myChart);
     myChart = new Chart(myChart, {
       type: 'bar',
       data: {
-        labels: [
-          'Angry',
-          'Disgusted',
-          'Scared',
-          'Happy',
-          'Neutral',
-          'Sad',
-          'Surprised',
-          'Calm'],
+        labels: this.labels,
         datasets: [{
           label: false,
-          data: [
-            25,
-            23,
-            20,
-            17,
-            15,
-            13,
-            12,
-            4,
-          ],
+          data: this.data,
           backgroundColor: [
             'rgba(255, 99, 132, 0.6)',
             'rgba(54, 162, 235, 0.6)',

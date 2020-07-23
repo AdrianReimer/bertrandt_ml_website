@@ -1,10 +1,10 @@
 // load model
-var model
+let model;
 tf.loadLayersModel('https://www.adrianreimer.com/assets/model/model.json').then(loaded_model=>{
 	model = loaded_model
 })
 
-var label_dict = {
+const label_dict = {
     "0": "Angry",
     "1": "Disgusted",
     "2": "Scared",
@@ -15,29 +15,30 @@ var label_dict = {
     "7": "Calm",
 }
 
-var DEFAULT_MFCC_VALUE = new Array(261)
-var FEATURE_NAME_MFCC = 'mfcc'
-var FEATURE_NAME_RMS = 'rms'
-var FEATURE_NAME_Buffer = 'buffer'
+const DB_NAME = 'home';
 
-var THRESHOLD_RMS = 0.001 // threshold on rms value
-var MFCC_HISTORY_MAX_LENGTH = 261
+const DEFAULT_MFCC_VALUE = new Array(261)
+const FEATURE_NAME_MFCC = 'mfcc'
+const FEATURE_NAME_RMS = 'rms'
+const FEATURE_NAME_Buffer = 'buffer'
 
-var BOX_WIDTH = 5
-var BOX_HEIGHT = 5
+const THRESHOLD_RMS = 0.001 // threshold on rms value
+const MFCC_HISTORY_MAX_LENGTH = 261
 
-var silence = true
+const BOX_WIDTH = 5
+const BOX_HEIGHT = 5
+const red_color = 150
+const green_color = 144
+const blue_color = 120
 
-var cur_mfcc = DEFAULT_MFCC_VALUE
-var cur_rms = 0
-var cur_buffer = 0
-var mfcc_history = []
+let silence = true
+let isReset = true;
 
-var canvas, ctx
-
-var red_color = 150
-var green_color = 144
-var blue_color = 120
+let cur_mfcc = DEFAULT_MFCC_VALUE
+let cur_rms = 0
+let cur_buffer = 0
+let mfcc_history = []
+let canvas, ctx
 
 /* get new audio 
 context object */
@@ -80,13 +81,27 @@ function onMicDataCall(features, callback) {
                 'bufferSize':512,
                 'featureExtractors':features,
                 'callback':callback,
-		'numberOfMFCCCoefficients': 40
+		        'numberOfMFCCCoefficients': 40
             })
             resolve(analyzer)
         }).catch((err)=>{
             reject(err)
         })
     })
+}
+
+function moveBars() {
+    const db = new PouchDB(DB_NAME);
+    db.get('mfccBar').then((doc) => {
+      console.log(doc.top);
+      document.getElementById('mfccBar').style.top = doc.top;
+      document.getElementById('mfccBar').style.left = doc.left;
+    });
+    db.get('bufferBar').then((doc) => {
+        console.log(doc.top);
+        document.getElementById('bufferBar').style.top = doc.top;
+        document.getElementById('bufferBar').style.left = doc.left;
+    });
 }
 
 
@@ -108,14 +123,40 @@ function show(features) {
     cur_buffer = features[FEATURE_NAME_Buffer]
 }
 
-function draw() {
-    if(document.getElementById('audioFeatures') != null) {
+function resetBars() {
+    if(isReset) {
         buffer_canvas = document.getElementById('buffer')
         buffer_ctx = buffer_canvas.getContext('2d')
         mfcc_canvas = document.getElementById('mfcc')
         mfcc_ctx = mfcc_canvas.getContext('2d')
         dragElement(document.getElementById("mfccBar"));
         dragElement(document.getElementById("bufferBar"));
+        moveBars();
+        isReset = false;
+    } 
+}
+
+function savePrediction(pred_label) {
+    const db = new PouchDB(DB_NAME);
+    db.get(pred_label).then((doc) => {
+      doc.value += 1;
+      return db.put(doc);
+    }).catch(() => {
+      const doc = {
+          _id: pred_label,
+          value: 0,
+      };
+      db.put(doc).then(() => {
+          console.log(pred_label + ' prediction amount initialized');
+      }).catch((err) => {
+          console.error(err);
+      });
+    });
+}
+
+function draw() {
+    if(document.getElementById('audioFeatures') != null) {
+        resetBars();
         // append new mfcc values
         if(cur_rms > THRESHOLD_RMS) {
             mfcc_history.push(cur_mfcc)
@@ -131,9 +172,12 @@ function draw() {
             var stacked = tf.stack([input, input, input], axis=-1)
             var reshaped = stacked.reshape([1, 40, 261, 3])
             var model_pred = model.predict(reshaped) 
-            document.getElementById("prediction").innerHTML = label_dict[tf.argMax(model_pred, axis=1).dataSync()]
+            var pred_label = label_dict[tf.argMax(model_pred, axis=1).dataSync()];
+            document.getElementById("prediction").innerHTML = pred_label;
+            savePrediction(pred_label);
         }
     } else {
+        isReset = true;
         mfcc_history = []
     }	
 }
@@ -248,8 +292,29 @@ function dragElement(elmnt) {
       elmnt.style.top = min(max((int((e.clientY / window.innerHeight) * 3.56) * (window.innerHeight/3.56)), 0), tmp_screenX) + "px";
       elmnt.style.left = min(max((int((e.clientX / window.innerWidth) * 2) * (window.innerWidth/2)), 0), tmp_screenY) + "px";
     }
+
+    function savePosition(elmnt) {
+        const db = new PouchDB(DB_NAME);
+        db.get(elmnt.path[2].id).then((doc) => {
+          doc.top = elmnt.path[2].style.top;
+          doc.left = elmnt.path[2].style.left;
+          return db.put(doc);
+        }).catch(() => {
+          const doc = {
+              _id: elmnt.path[2].id,
+              top: elmnt.path[2].style.top,
+              left: elmnt.path[2].style.left,
+          };
+          db.put(doc).then(() => {
+              console.log(elmnt.path[2].id + ' position initialized');
+          }).catch((err) => {
+              console.error(err);
+          });
+        });
+    }
   
-    function closeDragElement() {
+    function closeDragElement(elmnt) {
+      savePosition(elmnt);
       // stop moving when mouse button is released:
       document.onmouseup = null;
       document.onmousemove = null;
