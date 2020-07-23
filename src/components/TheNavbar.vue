@@ -1,5 +1,5 @@
 <template>
-    <header id="navbar">
+    <v-ons-bottom-toolbar id="navbar">
         <button @click="$router.push('/')" class="btn" id="homeBtn">
         <i class="fa fa-home fa-fw"></i></button>
         <button @click="$router.push('/trigger')" class="btn" id="triggerBtn">
@@ -10,7 +10,7 @@
         <i class="fa fa-question fa-fw"></i></button>
         <button @click="$router.push('/account')" class="btn" id="userBtn">
         <i class="fa fa-user fa-fw"></i></button>
-    </header>
+    </v-ons-bottom-toolbar>
 </template>
 
 <style lang="css">
@@ -20,12 +20,9 @@
         bottom: 0;
         left: 0;
         position: fixed;
-        background-color: rgb(233, 233, 233);
-        color: whitesmoke;
         display: flex;
         justify-content: center;
         align-items: center;
-        border-top: 0.5vmin solid rgb(216, 216, 216);
     }
 
     .btn {
