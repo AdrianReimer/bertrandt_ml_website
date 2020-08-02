@@ -28,12 +28,15 @@
     }
 
     #bufferBar {
+        visibility: hidden;
         top: 0;
         position: absolute;
         overflow: hidden;
         font-size: calc(2vmin);
-        height: 28.33vh;
-        width: 50%;
+        margin-top: 0.5vh;
+        margin-left: 0.5vw;
+        height: 29vh;
+        width: 49vw;
         background-color: rgb(40, 40, 40);
         color: whitesmoke;
     }
@@ -49,17 +52,26 @@
         background-color: rgb(200, 200, 200);
         display: flex;
         height: 28.33vh;
-        width: 100%;
+        width: 49vw;
         padding-bottom: 0.5vmin;
     }
 
+    #buffer {
+        position: fixed;
+        width: 49vw;
+        height: 25vh;
+    }
+
     #mfccBar {
+        visibility: hidden;
         top: 0;
-        position: absolute;
+        position: flex;
         overflow: hidden;
         font-size: calc(2vmin);
-        height: 28.33vh;
-        width: 50%;
+        margin-top: 0.5vh;
+        margin-left: 0.5vw;
+        height: 29vh;
+        width: 49vw;
         background-color: rgb(40, 40, 40);
         color: whitesmoke;
     }
@@ -71,11 +83,16 @@
         justify-content: center;
     }
 
+    #mfcc {
+        width: 49vw;
+        height: 27vh;
+    }
+
     .mfcc-info {
         background-color: rgb(200, 200, 200);
         display: flex;
         height: 28.33vh;
-        width: 100%;
+        width: 49vw;
         padding-bottom: 0.5vmin;
     }
 </style>

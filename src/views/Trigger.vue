@@ -2,10 +2,7 @@
     <section id="trigger">
       <TheAudio />
       <v-ons-page>
-        <v-ons-toolbar>
-          <div class="center">Triggers</div>
-        </v-ons-toolbar>
-        <ons-list>
+        <v-ons-list>
           <v-ons-list-header>Sound</v-ons-list-header>
           <v-ons-list-item v-for="(triggerSound, $index) in triggerSounds"
            v-bind:key="triggerSound" tappable>
@@ -66,7 +63,7 @@
                   &nbsp;(careful, that's loud)</span>
               </v-ons-list-item>
             </v-ons-list>
-        </ons-list>
+        </v-ons-list>
       </v-ons-page>
     </section>
 </template>
