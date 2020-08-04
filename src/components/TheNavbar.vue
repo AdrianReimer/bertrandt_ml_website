@@ -36,11 +36,11 @@ export default {
       document.getElementById(this.chartBtnID).childNodes[0].style.color = 'black';
       document.getElementById(this.helpBtnID).childNodes[0].style.color = 'black';
       document.getElementById(this.userBtnID).childNodes[0].style.color = 'black';
-      document.getElementById(btnID).childNodes[0].style.color = 'rgb(120, 120, 120)';
+      document.getElementById(btnID).childNodes[0].style.color = 'rgb(66, 133, 244)';
     },
   },
   mounted() {
-    document.getElementById(this.homeBtnID).childNodes[0].style.color = 'rgb(120, 120, 120)';
+    document.getElementById(this.homeBtnID).childNodes[0].style.color = 'rgb(66, 133, 244)';
   },
 };
 </script>
@@ -66,11 +66,5 @@ export default {
         align-items: center;
         outline: none;
         font-size: 6vmin;
-    }
-
-    .btn:hover {
-        transition-duration: 0.3s;
-        filter: opacity(50%);
-        -webkit-filter: opacity(50%);
     }
 </style>

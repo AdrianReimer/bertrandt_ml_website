@@ -19,21 +19,18 @@
     <button @click="curRect = 5; alertDialogVisible = true" class="homeBtn" id="homeBtn6">
     <i class="fa fa-plus-circle"></i></button>
 
-    <v-ons-alert-dialog modifier="rowfooter"
-    :visible.sync="alertDialogVisible"
-    >
-    <span slot="title">Title slots</span>
-    Lorem ipsum
+    <v-ons-alert-dialog modifier="rowfooter" :visible.sync="alertDialogVisible">
+    Please select a diagram type
     <template slot="footer">
-      <v-ons-alert-dialog-button @click="alertDialogVisible = false">
+      <ons-list-item tappable @click="addPlot(plots[0])">
+        {{ plots[0].charAt(0).toUpperCase() + plots[0].slice(1) }}
+      </ons-list-item>
+      <ons-list-item tappable @click="addPlot(plots[1])">
+        {{ plots[1].toUpperCase() }}
+      </ons-list-item>
+      <ons-list-item tappable style="color: red" @click="alertDialogVisible = false">
         Cancel
-      </v-ons-alert-dialog-button>
-      <v-ons-alert-dialog-button @click="addPlot(plots[0])">
-        Audiostream
-      </v-ons-alert-dialog-button>
-      <v-ons-alert-dialog-button @click="addPlot(plots[1])">
-        MFCC
-      </v-ons-alert-dialog-button>
+      </ons-list-item>
     </template>
     </v-ons-alert-dialog>
   <AudioFeatures />
@@ -57,9 +54,9 @@ export default {
     };
   },
   mounted() {
-    // load trigger sound
+    // load plots
     for (let i = 0; i < this.plots.length; i += 1) {
-      this.$pouch.get(this.plots[i], {}, 'home').then((doc) => {
+      this.$pouch.get(this.plots[i], {}, `${this.$user}home`).then((doc) => {
         const canvas = document.getElementById(`${this.plots[i]}Bar`);
         canvas.style.position = 'absolute';
         canvas.style.top = `${doc.y}vh`;
@@ -72,17 +69,17 @@ export default {
   },
   methods: {
     savePlotPosition(posX, posY, plotType) {
-      this.$pouch.get(plotType, {}, 'home').then((doc) => {
+      this.$pouch.get(plotType, {}, `${this.$user}home`).then((doc) => {
         doc.x = posX;
         doc.y = posY;
-        return this.$pouch.put(doc, {}, 'home');
+        return this.$pouch.put(doc, {}, `${this.$user}home`);
       }).catch(() => {
         const doc = {
           _id: plotType,
           x: posX,
           y: posY,
         };
-        this.$pouch.put(doc, {}, 'home').then(() => {
+        this.$pouch.put(doc, {}, `${this.$user}home`).then(() => {
           console.log('plot position saved');
         }).catch((err) => {
           console.error(err);
@@ -98,6 +95,7 @@ export default {
           canvas.style.position = 'absolute';
           canvas.style.top = `${top}vh`;
           canvas.style.left = `${left}vw`;
+          canvas.style.visibility = 'visible';
           this.savePlotPosition(left, top, this.plots[i]);
         }
       }
@@ -126,32 +124,32 @@ export default {
   #homeBtn1 {
     position: absolute;
     margin-top: 11.5vh;
-    margin-left: 21.5vw;
+    margin-left: 23vw;
   }
 
   #homeBtn2 {
     margin-top: 11.5vh;
-    margin-left: 71.5vw;
+    margin-left: 74vw;
   }
 
   #homeBtn3 {
     margin-top: 41.5vh;
-    margin-left: 21.5vw;
+    margin-left: 23vw;
   }
 
   #homeBtn4 {
     margin-top: 41.5vh;
-    margin-left: 71.5vw;
+    margin-left: 74vw;
   }
 
   #homeBtn5 {
     margin-top: 71.5vh;
-    margin-left: 21.5vw;
+    margin-left: 23vw;
   }
 
   #homeBtn6 {
     margin-top: 71.5vh;
-    margin-left: 71.5vw;
+    margin-left: 74vw;
   }
 
   .homeRect {

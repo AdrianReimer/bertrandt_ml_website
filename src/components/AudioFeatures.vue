@@ -51,7 +51,7 @@
     .buffer-info {
         background-color: rgb(200, 200, 200);
         display: flex;
-        height: 28.33vh;
+        height: 29vh;
         width: 49vw;
         padding-bottom: 0.5vmin;
     }
@@ -91,7 +91,7 @@
     .mfcc-info {
         background-color: rgb(200, 200, 200);
         display: flex;
-        height: 28.33vh;
+        height: 29vh;
         width: 49vw;
         padding-bottom: 0.5vmin;
     }

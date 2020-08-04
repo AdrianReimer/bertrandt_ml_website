@@ -1,6 +1,6 @@
 // load model
 let model;
-tf.loadLayersModel('https://www.adrianreimer.com/model/model.json').then(loaded_model=>{
+tf.loadLayersModel('https://www.adrianreimer.com/assets/model/model.json').then(loaded_model=>{
 	model = loaded_model
 })
 
@@ -90,21 +90,6 @@ function onMicDataCall(features, callback) {
     })
 }
 
-function moveBars() {
-    const db = new PouchDB(DB_NAME);
-    db.get('mfccBar').then((doc) => {
-      console.log(doc.top);
-      document.getElementById('mfccBar').style.top = doc.top;
-      document.getElementById('mfccBar').style.left = doc.left;
-    });
-    db.get('bufferBar').then((doc) => {
-        console.log(doc.top);
-        document.getElementById('bufferBar').style.top = doc.top;
-        document.getElementById('bufferBar').style.left = doc.left;
-    });
-}
-
-
 function setup() {
     // create meyda analyzer 
     // and connect to mic source
@@ -129,28 +114,79 @@ function resetBars() {
         buffer_ctx = buffer_canvas.getContext('2d')
         mfcc_canvas = document.getElementById('mfcc')
         mfcc_ctx = mfcc_canvas.getContext('2d')
-        dragElement(document.getElementById("mfccBar"));
-        dragElement(document.getElementById("bufferBar"));
-        moveBars();
         isReset = false;
     } 
 }
 
 function savePrediction(pred_label) {
     const db = new PouchDB(DB_NAME);
-    db.get(pred_label).then((doc) => {
+    // get current Day
+    const today = new Date();
+    const dd = String(today.getDate()).padStart(2, '0');
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const year = today.getFullYear();
+    const day = `${dd}${mm}${year}`;
+    const week = `${parseInt((dd / 7) + (mm * 4), 10)}${year}`;
+    const month = `${mm}${year}`;
+    // day
+    db.get(`${day}${pred_label}`).then((doc) => {
       doc.value += 1;
       return db.put(doc);
     }).catch(() => {
       const doc = {
-          _id: pred_label,
-          value: 0,
-      };
+      _id: `${day}${pred_label}`,
+      value: 0,
+    };
       db.put(doc).then(() => {
-          console.log(pred_label + ' prediction amount initialized');
+      console.log(pred_label + ' prediction amount initialized');
+    }).catch((err) => {
+      console.error(err);
+    });
+    });
+    // week
+    db.get(`${week}${pred_label}`).then((doc) => {
+        doc.value += 1;
+        return db.put(doc);
+      }).catch(() => {
+        const doc = {
+        _id: `${week}${pred_label}`,
+        value: 0,
+      };
+        db.put(doc).then(() => {
+        console.log(pred_label + ' prediction amount initialized');
       }).catch((err) => {
-          console.error(err);
+        console.error(err);
       });
+    });
+    // month
+    db.get(`${month}${pred_label}`).then((doc) => {
+        doc.value += 1;
+        return db.put(doc);
+      }).catch(() => {
+        const doc = {
+        _id: `${month}${pred_label}`,
+        value: 0,
+      };
+        db.put(doc).then(() => {
+        console.log(pred_label + ' prediction amount initialized');
+      }).catch((err) => {
+        console.error(err);
+      });
+    });
+    // year
+    db.get(`${year}${pred_label}`).then((doc) => {
+        doc.value += 1;
+        return db.put(doc);
+        }).catch(() => {
+        const doc = {
+        _id: `${year}${pred_label}`,
+        value: 0,
+        };
+        db.put(doc).then(() => {
+        console.log(pred_label + ' prediction amount initialized');
+        }).catch((err) => {
+        console.error(err);
+        });
     });
 }
 
@@ -256,67 +292,3 @@ function full_plot_mfcc() {
         }
     }
 }
-
-function dragElement(elmnt) {
-    var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-    if (document.getElementById(elmnt.id)) {
-      // if present, the header is where you move the DIV from:
-      document.getElementById(elmnt.id).onmousedown = dragMouseDown;
-    } else {
-      // otherwise, move the DIV from anywhere inside the DIV:
-      elmnt.onmousedown = dragMouseDown;
-    }
-  
-    function dragMouseDown(e) {
-      e = e || window.event;
-      e.preventDefault();
-      // get the mouse cursor position at startup:
-      pos3 = e.clientX;
-      pos4 = e.clientY;
-      document.onmouseup = closeDragElement;
-      // call a function whenever the cursor moves:
-      document.onmousemove = elementDrag;
-    }
-  
-    function elementDrag(e) {
-      const tmp_screenX = window.innerHeight / (window.devicePixelRatio * 1.78);
-      const tmp_screenY = window.innerWidth / (window.devicePixelRatio * 2);
-      e = e || window.event;
-      e.preventDefault();
-      // calculate the new cursor position:
-      pos1 = pos3 - e.clientX;
-      pos2 = pos4 - e.clientY;
-      pos3 = e.clientX;
-      pos4 = e.clientY;
-      // set the element's new position:
-      elmnt.style.top = min(max((int((e.clientY / window.innerHeight) * 3.56) * (window.innerHeight/3.56)), 0), tmp_screenX) + "px";
-      elmnt.style.left = min(max((int((e.clientX / window.innerWidth) * 2) * (window.innerWidth/2)), 0), tmp_screenY) + "px";
-    }
-
-    function savePosition(elmnt) {
-        const db = new PouchDB(DB_NAME);
-        db.get(elmnt.path[2].id).then((doc) => {
-          doc.top = elmnt.path[2].style.top;
-          doc.left = elmnt.path[2].style.left;
-          return db.put(doc);
-        }).catch(() => {
-          const doc = {
-              _id: elmnt.path[2].id,
-              top: elmnt.path[2].style.top,
-              left: elmnt.path[2].style.left,
-          };
-          db.put(doc).then(() => {
-              console.log(elmnt.path[2].id + ' position initialized');
-          }).catch((err) => {
-              console.error(err);
-          });
-        });
-    }
-  
-    function closeDragElement(elmnt) {
-      savePosition(elmnt);
-      // stop moving when mouse button is released:
-      document.onmouseup = null;
-      document.onmousemove = null;
-    }
-  }
