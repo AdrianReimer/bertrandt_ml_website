@@ -119,37 +119,24 @@ function resetBars() {
 }
 
 function savePrediction(pred_label) {
-    const db = new PouchDB(DB_NAME);
-    // get current Day
-    const today = new Date();
-    const dd = String(today.getDate()).padStart(2, '0');
-    const mm = String(today.getMonth() + 1).padStart(2, '0');
-    const year = today.getFullYear();
-    const day = `${dd}${mm}${year}`;
-    const week = `${parseInt((dd / 7) + (mm * 4), 10)}${year}`;
-    const month = `${mm}${year}`;
-    // day
-    db.get(`${day}${pred_label}`).then((doc) => {
-      doc.value += 1;
-      return db.put(doc);
-    }).catch(() => {
-      const doc = {
-      _id: `${day}${pred_label}`,
-      value: 0,
-    };
-      db.put(doc).then(() => {
-      console.log(pred_label + ' prediction amount initialized');
-    }).catch((err) => {
-      console.error(err);
-    });
-    });
-    // week
-    db.get(`${week}${pred_label}`).then((doc) => {
+    const namedb = new PouchDB('account');
+    namedb.get('userCur').then((doc) => {
+      const db = new PouchDB(doc.username + DB_NAME);
+      // get current Day
+      const today = new Date();
+      const dd = String(today.getDate()).padStart(2, '0');
+      const mm = String(today.getMonth() + 1).padStart(2, '0');
+      const year = today.getFullYear();
+      const day = `${dd}${mm}${year}`;
+      const week = `${parseInt((dd / 7) + (mm * 4), 10)}${year}`;
+      const month = `${mm}${year}`;
+      // day
+      db.get(`${day}${pred_label}`).then((doc) => {
         doc.value += 1;
         return db.put(doc);
       }).catch(() => {
         const doc = {
-        _id: `${week}${pred_label}`,
+        _id: `${day}${pred_label}`,
         value: 0,
       };
         db.put(doc).then(() => {
@@ -157,36 +144,54 @@ function savePrediction(pred_label) {
       }).catch((err) => {
         console.error(err);
       });
-    });
-    // month
-    db.get(`${month}${pred_label}`).then((doc) => {
-        doc.value += 1;
-        return db.put(doc);
-      }).catch(() => {
-        const doc = {
-        _id: `${month}${pred_label}`,
-        value: 0,
-      };
-        db.put(doc).then(() => {
-        console.log(pred_label + ' prediction amount initialized');
-      }).catch((err) => {
-        console.error(err);
       });
-    });
-    // year
-    db.get(`${year}${pred_label}`).then((doc) => {
-        doc.value += 1;
-        return db.put(doc);
+      // week
+      db.get(`${week}${pred_label}`).then((doc) => {
+          doc.value += 1;
+          return db.put(doc);
         }).catch(() => {
-        const doc = {
-        _id: `${year}${pred_label}`,
-        value: 0,
+          const doc = {
+          _id: `${week}${pred_label}`,
+          value: 0,
         };
-        db.put(doc).then(() => {
-        console.log(pred_label + ' prediction amount initialized');
+          db.put(doc).then(() => {
+          console.log(pred_label + ' prediction amount initialized');
         }).catch((err) => {
-        console.error(err);
+          console.error(err);
         });
+      });
+      // month
+      db.get(`${month}${pred_label}`).then((doc) => {
+          doc.value += 1;
+          return db.put(doc);
+        }).catch(() => {
+          const doc = {
+          _id: `${month}${pred_label}`,
+          value: 0,
+        };
+          db.put(doc).then(() => {
+          console.log(pred_label + ' prediction amount initialized');
+        }).catch((err) => {
+          console.error(err);
+        });
+      });
+      // year
+      db.get(`${year}${pred_label}`).then((doc) => {
+          doc.value += 1;
+          return db.put(doc);
+          }).catch(() => {
+          const doc = {
+          _id: `${year}${pred_label}`,
+          value: 0,
+          };
+          db.put(doc).then(() => {
+          console.log(pred_label + ' prediction amount initialized');
+          }).catch((err) => {
+          console.error(err);
+          });
+      });
+    }).catch((err) => {
+      console.log(err);
     });
 }
 
