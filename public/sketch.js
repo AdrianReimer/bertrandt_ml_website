@@ -15,7 +15,7 @@ const label_dict = {
     "7": "Calm",
 }
 
-const DB_NAME = 'home';
+const DB_NAME = `${this.$name}home`;
 
 const DEFAULT_MFCC_VALUE = new Array(261)
 const FEATURE_NAME_MFCC = 'mfcc'

@@ -59,7 +59,7 @@
     #buffer {
         position: fixed;
         width: 49vw;
-        height: 25vh;
+        height: 29vh;
     }
 
     #mfccBar {
@@ -85,7 +85,7 @@
 
     #mfcc {
         width: 49vw;
-        height: 27vh;
+        height: 29vh;
     }
 
     .mfcc-info {
