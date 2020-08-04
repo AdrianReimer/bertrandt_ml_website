@@ -1,6 +1,6 @@
 // load model
 let model;
-tf.loadLayersModel('https://www.adrianreimer.com/assets/model/model.json').then(loaded_model=>{
+tf.loadLayersModel('https://www.adrianreimer.com/model/model.json').then(loaded_model=>{
 	model = loaded_model
 })
 
