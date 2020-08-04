@@ -62,6 +62,7 @@ export default {
         canvas.style.top = `${doc.y}vh`;
         canvas.style.left = `${doc.x}vw`;
         canvas.style.visibility = 'visible';
+        console.log('home setup');
       }).catch((err) => {
         console.error(err);
       });
