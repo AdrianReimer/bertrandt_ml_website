@@ -5,7 +5,6 @@
         <v-ons-list>
           <ons-list-item>
             <label class="center" for="switch1">
-              {{ triggerSoundSwitchOn ? 'Active' : 'Deactive' }}
             </label>
             <div class="right">
               <v-ons-switch input-id="switch1" v-model="triggerSoundSwitchOn"
@@ -75,6 +74,7 @@
 </template>
 
 <script>
+import Vue from 'vue';
 import TheAudio from '../components/TheAudio.vue';
 
 export default {
@@ -92,6 +92,7 @@ export default {
     };
   },
   mounted() {
+    Vue.prototype.stopDraw();
     // load trigger sound
     this.$pouch.get('selectedTriggerSound', {}, `${this.$user}trigger`).then((doc) => {
       this.selectedTriggerSound = doc.value;

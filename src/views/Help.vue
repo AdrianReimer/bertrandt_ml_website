@@ -42,3 +42,13 @@
       </v-ons-page>
     </section>
 </template>
+
+<script>
+import Vue from 'vue';
+
+export default {
+  mounted() {
+    Vue.prototype.stopDraw();
+  },
+};
+</script>

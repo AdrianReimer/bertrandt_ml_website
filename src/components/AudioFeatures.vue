@@ -28,15 +28,10 @@
     }
 
     #bufferBar {
-        visibility: hidden;
-        top: 0;
-        position: absolute;
+        position: flex;
         overflow: hidden;
         font-size: calc(2vmin);
-        margin-top: 0.5vh;
-        margin-left: 0.5vw;
-        height: 29vh;
-        width: 49vw;
+        height: 30vh;
         background-color: rgb(40, 40, 40);
         color: whitesmoke;
     }
@@ -46,32 +41,27 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        height: 3vh;
     }
 
     .buffer-info {
         background-color: rgb(200, 200, 200);
         display: flex;
-        height: 29vh;
-        width: 49vw;
-        padding-bottom: 0.5vmin;
+        height: 30vh;
     }
 
     #buffer {
-        position: fixed;
-        width: 49vw;
-        height: 29vh;
+        height: 30vh;
+        width: 100vw;
     }
 
     #mfccBar {
+        border-radius: 10px;
         visibility: hidden;
-        top: 0;
         position: flex;
         overflow: hidden;
         font-size: calc(2vmin);
-        margin-top: 0.5vh;
-        margin-left: 0.5vw;
-        height: 29vh;
-        width: 49vw;
+        height: 30vh;
         background-color: rgb(40, 40, 40);
         color: whitesmoke;
     }
@@ -81,18 +71,17 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        height: 3vh;
     }
 
     #mfcc {
-        width: 49vw;
-        height: 29vh;
+        height: 30vh;
+        width: 100vw;
     }
 
     .mfcc-info {
         background-color: rgb(200, 200, 200);
         display: flex;
-        height: 29vh;
-        width: 49vw;
-        padding-bottom: 0.5vmin;
+        height: 30vh;
     }
 </style>

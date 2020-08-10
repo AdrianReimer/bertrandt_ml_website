@@ -219,6 +219,7 @@ export default {
     };
   },
   mounted() {
+    Vue.prototype.stopDraw();
     // load daily emotion switch
     this.$pouch.get('dailyEmotionSwitchOn', {}, 'account').then((doc) => {
       this.dailyEmotionSwitchOn = doc.value;
