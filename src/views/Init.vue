@@ -1,25 +1,25 @@
 <template>
   <div>
-    <v-ons-alert-dialog modifier="rowfooter"
-    :visible.sync="userCreationDialogVisible"
-    >
-    Please enter a username and email for your root account
-    <template slot="footer">
+    <v-ons-page style="height:90vh;">
+      <v-ons-list>
+        <v-ons-list-header id="inputSel">USER</v-ons-list-header>
       <ons-input id="username"
                  modifier="underbar=false"
                  placeholder="Username"
                  style="width: 100vw"
-                 float></ons-input>
+                 float>
+      </ons-input>
       <ons-input id="email"
                  modifier="underbar=false"
                  placeholder="E-mail"
                  style="width: 100vw"
-                 float></ons-input>
-      <v-ons-alert-dialog-button @click="saveUser()">
+                 float>
+      </ons-input>
+      <v-ons-alert-dialog-button @click="createUser()">
         Submit
       </v-ons-alert-dialog-button>
-    </template>
-    </v-ons-alert-dialog>
+      </v-ons-list>
+    </v-ons-page>
 
     <v-ons-alert-dialog modifier="rowfooter"
     :visible.sync="userCreationFailedDialogVisible"
@@ -48,23 +48,6 @@
 </template>
 
 <script>
-import 'onsenui/css/onsenui.css';
-import 'onsenui/css/onsen-css-components.css';
-
-import PouchDB from 'pouchdb-browser';
-import PouchFind from 'pouchdb-find';
-import PouchLiveFind from 'pouchdb-live-find';
-import PouchVue from 'pouch-vue';
-import Vue from 'vue';
-import VueOnsen from 'vue-onsenui';
-
-PouchDB.plugin(PouchFind);
-PouchDB.plugin(PouchLiveFind);
-Vue.use(PouchVue, {
-  pouch: PouchDB,
-});
-Vue.use(VueOnsen);
-
 export default {
   data() {
     return {
@@ -101,6 +84,7 @@ export default {
           });
           const doc2 = {
             _id: 'userCur',
+            name: 'user0',
             username,
             email,
           };
@@ -110,8 +94,6 @@ export default {
             console.log(err);
           });
           this.userCreationDialogVisible = false;
-          Vue.prototype.$user = username;
-          Vue.prototype.$email = email;
         } else {
           this.emailCreationFailedDialogVisible = true;
         }

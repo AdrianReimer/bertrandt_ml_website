@@ -28,9 +28,10 @@
     }
 
     #bufferBar {
+        border-radius: 10px;
         position: flex;
         overflow: hidden;
-        font-size: calc(2vmin);
+        font-size: 3vmin;
         height: 30vh;
         background-color: rgb(40, 40, 40);
         color: whitesmoke;
@@ -60,7 +61,7 @@
         visibility: hidden;
         position: flex;
         overflow: hidden;
-        font-size: calc(2vmin);
+        font-size: 3vmin;
         height: 30vh;
         background-color: rgb(40, 40, 40);
         color: whitesmoke;

@@ -48,7 +48,11 @@ import Vue from 'vue';
 
 export default {
   mounted() {
-    Vue.prototype.stopDraw();
+    try {
+      Vue.prototype.stopDraw();
+    } catch {
+      console.log('stopDraw function not defined');
+    }
   },
 };
 </script>

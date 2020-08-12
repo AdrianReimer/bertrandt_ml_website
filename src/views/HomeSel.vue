@@ -1,5 +1,5 @@
 <template>
-  <section id="homeInSel">
+  <section id="homeSel">
     <v-ons-page style="height:90vh;">
       <v-ons-list>
         <v-ons-list-header>Input Selection
@@ -74,7 +74,7 @@ export default {
   methods: {
     loadSelPlot() {
       this.$pouch.get('userCur', {}, 'account').then((user) => {
-        this.$pouch.get('plot', {}, `${user.username}home`).then((doc) => {
+        this.$pouch.get('plot', {}, `${user.name}home`).then((doc) => {
           for (let i = 0; i < this.plots.length; i += 1) {
             if (doc.plotType === this.plots[i]) {
               switch (i) {
@@ -98,16 +98,16 @@ export default {
 
     savePlotPosition(plotType) {
       this.$pouch.get('userCur', {}, 'account').then((user) => {
-        this.$pouch.get('plot', {}, `${user.username}home`).then((doc) => {
+        this.$pouch.get('plot', {}, `${user.name}home`).then((doc) => {
           doc.plotType = plotType;
           this.$router.push('/');
-          return this.$pouch.put(doc, {}, `${user.username}home`);
+          return this.$pouch.put(doc, {}, `${user.name}home`);
         }).catch(() => {
           const doc = {
             _id: 'plot',
             plotType,
           };
-          this.$pouch.put(doc, {}, `${user.username}home`).then(() => {
+          this.$pouch.put(doc, {}, `${user.name}home`).then(() => {
             console.log('plot position saved');
             this.$router.push('/');
           }).catch((err) => {

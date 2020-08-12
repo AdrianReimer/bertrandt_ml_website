@@ -44,25 +44,25 @@ export default {
       this.$pouch.get('userCur', {}, 'account').then((user) => {
         for (let i = 0; i < this.labels.length; i += 1) {
           // load day data
-          this.$pouch.get(`${day}${this.labels[i]}`, {}, `${user.username}home`).then((doc) => {
+          this.$pouch.get(`${day}${this.labels[i]}`, {}, `${user.name}home`).then((doc) => {
             this.dayData[i] = doc.value;
           }).catch((err) => {
             console.log(err);
           });
           // load week data
-          this.$pouch.get(`${week}${this.labels[i]}`, {}, `${user.username}home`).then((doc) => {
+          this.$pouch.get(`${week}${this.labels[i]}`, {}, `${user.name}home`).then((doc) => {
             this.weekData[i] = doc.value;
           }).catch((err) => {
             console.log(err);
           });
           // load month data
-          this.$pouch.get(`${month}${this.labels[i]}`, {}, `${user.username}home`).then((doc) => {
+          this.$pouch.get(`${month}${this.labels[i]}`, {}, `${user.name}home`).then((doc) => {
             this.monthData[i] = doc.value;
           }).catch((err) => {
             console.log(err);
           });
           // load year data
-          this.$pouch.get(`${year}${this.labels[i]}`, {}, `${user.username}home`).then((doc) => {
+          this.$pouch.get(`${year}${this.labels[i]}`, {}, `${user.name}home`).then((doc) => {
             this.yearData[i] = doc.value;
           }).catch((err) => {
             console.log(err);
@@ -114,7 +114,11 @@ export default {
     },
   },
   mounted() {
-    Vue.prototype.stopDraw();
+    try {
+      Vue.prototype.stopDraw();
+    } catch {
+      console.log('stopDraw function not defined');
+    }
     this.loadData();
     this.createPlot(this.plots[0], this.dayData);
     this.createPlot(this.plots[1], this.weekData);
@@ -123,7 +127,7 @@ export default {
     // load plot positions
     for (let i = 0; i < this.plots.length; i += 1) {
       this.$pouch.get('userCur', {}, 'account').then((user) => {
-        this.$pouch.get(`${this.plots[i]}Plot`, {}, `${user.username}statistic`).then((doc) => {
+        this.$pouch.get(`${this.plots[i]}Plot`, {}, `${user.name}statistic`).then((doc) => {
           if (doc.visible) {
             const canvas = document.getElementById(`stat${this.plots[i]}`);
             canvas.style.position = 'relative';

@@ -3,47 +3,26 @@
       <TheAudio />
       <v-ons-page style="height:90vh;">
         <v-ons-list>
-          <ons-list-item>
-            <label class="center" for="switch1">
-            </label>
-            <div class="right">
-              <v-ons-switch input-id="switch1" v-model="triggerSoundSwitchOn"
-                @change="saveTriggerSoundSwitch">
-              </v-ons-switch>
-            </div>
-          </ons-list-item>
           <v-ons-list-header>Sound</v-ons-list-header>
           <v-ons-list-item v-for="(triggerSound, $index) in triggerSounds"
-           v-bind:key="triggerSound" tappable>
+          v-bind:key="triggerSound" tappable>
             <label class="left">
-              <v-ons-radio
-                :input-id="'radio-1' + $index"
+              <v-ons-checkbox
+                :input-id="'checkbox-1' + $index"
                 :value="triggerSound"
-                :disabled="!triggerSoundSwitchOn"
-                v-model="selectedTriggerSound"
-                @change="saveTriggerSound">
-              </v-ons-radio>
+                v-model="checkedTriggerSounds"
+                @change="saveTriggerSound($index)">
+              </v-ons-checkbox>
             </label>
-            <label :for="'radio-1' + $index" class="center">
+            <label class="center" :for="'checkbox-1' + $index">
               {{ triggerSound }}
             </label>
+            <div class="right">
+              <v-ons-button :for="'playBtn-' + $index" @click="playTriggerSound($index + 1)">
+                <i class="fa fa-play fa-fw "></i>
+              </v-ons-button>
+            </div>
           </v-ons-list-item>
-          <v-ons-list-header>Label</v-ons-list-header>
-            <v-ons-list-item v-for="(triggerLabel, $index) in triggerLabels"
-            v-bind:key="triggerLabel" tappable>
-              <label class="left">
-                <v-ons-radio
-                  :input-id="'radio-2' + $index"
-                  :value="triggerLabel"
-                  :disabled="!triggerSoundSwitchOn"
-                  v-model="selectedTriggerLabel"
-                  @change="saveTriggerLabel">
-                </v-ons-radio>
-              </label>
-              <label :for="'radio-2' + $index" class="center">
-                {{ triggerLabel }}
-              </label>
-            </v-ons-list-item>
           <v-ons-list-header>Settings</v-ons-list-header>
             <v-ons-list>
               <v-ons-list-item>
@@ -55,7 +34,6 @@
                   <v-ons-col>
                     <v-ons-range
                       style="width: 100%;"
-                      :disabled="!triggerSoundSwitchOn"
                       v-model="triggerSoundVolume"
                       @change="saveTriggerSoundVolume">
                     </v-ons-range>
@@ -84,113 +62,114 @@ export default {
   data() {
     return {
       triggerSounds: ['Trigger1', 'Trigger2', 'Trigger3'],
+      checkedTriggerSounds: [],
       triggerLabels: ['Angry', 'Disgusted', 'Scared', 'Happy', 'Neutral', 'Sad', 'Surprised'],
-      selectedTriggerSound: 'Trigger1',
-      selectedTriggerLabel: 'Disgusted',
-      triggerSoundSwitchOn: true,
       triggerSoundVolume: 50,
     };
   },
   mounted() {
-    Vue.prototype.stopDraw();
-    // load trigger sound
-    this.$pouch.get('selectedTriggerSound', {}, `${this.$user}trigger`).then((doc) => {
-      this.selectedTriggerSound = doc.value;
-    }).catch((err) => {
-      console.log(err);
-    });
-    // load label sound
-    this.$pouch.get('selectedTriggerLabel', {}, `${this.$user}trigger`).then((doc) => {
-      this.selectedTriggerLabel = doc.value;
-    }).catch((err) => {
-      console.log(err);
-    });
-    // load trigger button
-    this.$pouch.get('triggerSoundSwitchOn', {}, `${this.$user}trigger`).then((doc) => {
-      this.triggerSoundSwitchOn = doc.value;
-    }).catch((err) => {
-      console.log(err);
-    });
-    // load trigger sound volume
-    this.$pouch.get('triggerSoundVolume', {}, `${this.$user}trigger`).then((doc) => {
-      this.triggerSoundVolume = doc.value;
-      document.getElementById(this.selectedTriggerSound).volume = doc.value / 100;
-    }).catch((err) => {
-      console.log(err);
-    });
+    try {
+      Vue.prototype.stopDraw();
+    } catch {
+      console.log('stopDraw function not defined');
+    }
+    this.loadData();
   },
   methods: {
-    saveTriggerSound() {
-      this.$pouch.get('selectedTriggerSound', {}, `${this.$user}trigger`).then((doc) => {
-        doc.value = this.selectedTriggerSound;
-        this.playTriggerSound();
-        return this.$pouch.put(doc, {}, `${this.$user}trigger`);
-      }).catch(() => {
-        const doc = {
-          _id: 'selectedTriggerSound',
-          value: this.selectedTriggerSound,
-        };
-        this.$pouch.put(doc, {}, `${this.$user}trigger`).then(() => {
-          console.log('Trigger sound saved');
+    loadData() {
+      this.$pouch.get('userCur', {}, 'account').then((user) => {
+        // load trigger sound
+        for (let i = 0; i < this.triggerSounds.length; i += 1) {
+          this.$pouch.get(`trigger${i}`, {}, `${user.name}trigger`).then((doc) => {
+            if (doc.state) {
+              this.checkedTriggerSounds.push(`Trigger${i + 1}`);
+              console.log(this.checkedTriggerSounds);
+            }
+          }).catch((err) => {
+            console.log(err);
+          });
+        }
+        // load trigger sound volume
+        this.$pouch.get('triggerSoundVolume', {}, `${user.name}trigger`).then((doc) => {
+          this.triggerSoundVolume = doc.value;
         }).catch((err) => {
-          console.error(err);
+          console.log(err);
         });
+      }).catch((err) => {
+        console.log(err);
       });
     },
-    saveTriggerLabel() {
-      this.$pouch.get('selectedTriggerLabel', {}, `${this.$user}trigger`).then((doc) => {
-        doc.value = this.selectedTriggerLabel;
-        return this.$pouch.put(doc, {}, `${this.$user}trigger`);
-      }).catch(() => {
-        const doc = {
-          _id: 'selectedTriggerLabel',
-          value: this.selectedTriggerLabel,
-        };
-        this.$pouch.put(doc, {}, `${this.$user}trigger`).then(() => {
-          console.log('Trigger label saved');
+
+    saveTriggerSound(triggerNum) {
+      this.$pouch.get('userCur', {}, 'account').then((user) => {
+        // save trigger state
+        this.$pouch.get(`trigger${triggerNum}`, {}, `${user.name}trigger`).then((doc) => {
+          doc.state = !doc.state;
+          if (doc.state) {
+            this.$router.push('/trigger/selection');
+          }
+          return this.$pouch.put(doc, {}, `${user.name}trigger`);
+        }).catch(() => {
+          const doc = {
+            _id: `trigger${triggerNum}`,
+            state: true,
+          };
+          this.$pouch.put(doc, {}, `${user.name}trigger`).then(() => {
+            console.log('Trigger sound saved');
+            this.$router.push('/trigger/selection');
+          }).catch((err) => {
+            console.error(err);
+          });
         }).catch((err) => {
-          console.error(err);
+          console.log(err);
         });
+        // save changeable trigger
+        this.$pouch.get('triggerCur', {}, `${user.name}trigger`).then((doc) => {
+          doc.value = triggerNum;
+          return this.$pouch.put(doc, {}, `${user.name}trigger`);
+        }).catch(() => {
+          const doc = {
+            _id: 'triggerCur',
+            value: triggerNum,
+          };
+          this.$pouch.put(doc, {}, `${user.username}trigger`).then(() => {
+            console.log('Trigger sound saved');
+          }).catch((err) => {
+            console.error(err);
+          });
+        });
+      }).catch((err) => {
+        console.log(err);
       });
     },
-    saveTriggerSoundSwitch() {
-      this.$pouch.get('triggerSoundSwitchOn', {}, `${this.$user}trigger`).then((doc) => {
-        doc.value = this.triggerSoundSwitchOn;
-        return this.$pouch.put(doc, {}, `${this.$user}trigger`);
-      }).catch(() => {
-        const doc = {
-          _id: 'triggerSoundSwitchOn',
-          value: this.triggerSoundSwitchOn,
-        };
-        this.$pouch.put(doc, {}, `${this.$user}trigger`).then(() => {
-          console.log('Trigger sound switch saved');
-        }).catch((err) => {
-          console.error(err);
-        });
-      });
-    },
+
     saveTriggerSoundVolume() {
-      this.$pouch.get('triggerSoundVolume', {}, `${this.$user}trigger`).then((doc) => {
-        doc.value = this.triggerSoundVolume;
-        return this.$pouch.put(doc, {}, `${this.$user}trigger`);
-      }).catch(() => {
-        const doc = {
-          _id: 'triggerSoundVolume',
-          value: this.triggerSoundVolume,
-        };
-        this.$pouch.put(doc, {}, `${this.$user}trigger`).then(() => {
-          console.log('Trigger sound volume saved');
-        }).catch((err) => {
-          console.error(err);
+      this.$pouch.get('userCur', {}, 'account').then((user) => {
+        this.$pouch.get('triggerSoundVolume', {}, `${user.name}trigger`).then((doc) => {
+          doc.value = this.triggerSoundVolume;
+          return this.$pouch.put(doc, {}, `${user.name}trigger`);
+        }).catch(() => {
+          const doc = {
+            _id: 'triggerSoundVolume',
+            value: this.triggerSoundVolume,
+          };
+          this.$pouch.put(doc, {}, `${user.name}trigger`).then(() => {
+            console.log('Trigger sound volume saved');
+          }).catch((err) => {
+            console.error(err);
+          });
         });
+      }).catch((err) => {
+        console.log(err);
       });
-      document.getElementById(this.selectedTriggerSound).volume = this.triggerSoundVolume / 100;
     },
-    playTriggerSound() {
-      document.getElementById(this.selectedTriggerSound).volume = this.triggerSoundVolume / 100;
-      const audio = document.getElementById(this.selectedTriggerSound);
+
+    playTriggerSound(btnIdx) {
+      document.getElementById(`Trigger${btnIdx}`).volume = this.triggerSoundVolume / 100;
+      const audio = document.getElementById(`Trigger${btnIdx}`);
       audio.play();
     },
+
   },
 };
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <section id="homeInSel">
+  <section id="statisticSel">
     <v-ons-page style="height:90vh;">
       <v-ons-list>
         <v-ons-list-header id="inputSel">Input Selection
@@ -101,7 +101,7 @@ export default {
     loadSelPlot() {
       this.$pouch.get('userCur', {}, 'account').then((user) => {
         for (let i = 0; i < this.plots.length; i += 1) {
-          this.$pouch.get(`${this.plots[i]}Plot`, {}, `${user.username}statistic`).then((doc) => {
+          this.$pouch.get(`${this.plots[i]}Plot`, {}, `${user.name}statistic`).then((doc) => {
             switch (i) {
               case 0:
                 this.cbDay = doc.visible;
@@ -128,15 +128,15 @@ export default {
 
     savePlotPosition(plotType) {
       this.$pouch.get('userCur', {}, 'account').then((user) => {
-        this.$pouch.get(`${plotType}Plot`, {}, `${user.username}statistic`).then((doc) => {
+        this.$pouch.get(`${plotType}Plot`, {}, `${user.name}statistic`).then((doc) => {
           doc.visible = !doc.visible;
-          return this.$pouch.put(doc, {}, `${user.username}statistic`);
+          return this.$pouch.put(doc, {}, `${user.name}statistic`);
         }).catch(() => {
           const doc = {
             _id: `${plotType}Plot`,
             visible: true,
           };
-          this.$pouch.put(doc, {}, `${user.username}statistic`).then(() => {
+          this.$pouch.put(doc, {}, `${user.name}statistic`).then(() => {
             console.log('plot saved');
           }).catch((err) => {
             console.error(err);

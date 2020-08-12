@@ -1,30 +1,25 @@
 <template>
   <v-ons-bottom-toolbar id="navbar">
-    <button @click="toggleIconColor(homeBtnID); $router.push('/')"
-    class="btn" id="homeBtn">
+    <v-ons-button @click="toggleIconColor(homeBtnID); $router.push('/')"
+    modifier="quiet" class="btn" id="homeBtn">
       <i class="fa fa-home fa-fw"></i>
-      <p class="iconText">Home</p>
-    </button>
-    <button @click="toggleIconColor(chartBtnID); $router.push('/statistic')"
-    class="btn" id="chartBtn">
+    </v-ons-button>
+    <v-ons-button @click="toggleIconColor(chartBtnID); $router.push('/statistic')"
+    modifier="quiet" class="btn" id="chartBtn">
       <i class="fa fa-pie-chart fa-fw"></i>
-      <p class="iconText">Statistic</p>
-    </button>
-    <button @click="toggleIconColor(triggerBtnID); $router.push('/trigger')"
-    class="btn" id="triggerBtn">
+    </v-ons-button>
+    <v-ons-button @click="toggleIconColor(triggerBtnID); $router.push('/trigger')"
+    modifier="quiet" class="btn" id="triggerBtn">
       <i class="fa fa-volume-up fa-fw"></i>
-      <p class="iconText">Trigger</p>
-    </button>
-    <button @click="toggleIconColor(helpBtnID); $router.push('/help')"
-    class="btn" id="helpBtn">
-      <i class="fa fa-question fa-fw"></i>
-      <p class="iconText">Help</p>
-    </button>
-    <button @click="toggleIconColor(userBtnID); $router.push('/account')"
-    class="btn" id="userBtn">
+    </v-ons-button>
+    <v-ons-button @click="toggleIconColor(userBtnID); $router.push('/account')"
+    modifier="quiet" class="btn" id="userBtn">
       <i class="fa fa-user fa-fw "></i>
-      <p class="iconText">More</p>
-    </button>
+    </v-ons-button>
+    <v-ons-button @click="toggleIconColor(privacyBtnID); $router.push('/privacy')"
+    modifier="quiet" class="btn" id="privacyBtn">
+      <i class="fa fa-user-secret fa-fw"></i>
+    </v-ons-button>
   </v-ons-bottom-toolbar>
 </template>
 
@@ -35,8 +30,9 @@ export default {
       homeBtnID: 'homeBtn',
       triggerBtnID: 'triggerBtn',
       chartBtnID: 'chartBtn',
-      helpBtnID: 'helpBtn',
       userBtnID: 'userBtn',
+      privacyBtnID: 'privacyBtn',
+      btnColorAct: 'rgb(66, 133, 244)',
     };
   },
   methods: {
@@ -44,13 +40,27 @@ export default {
       document.getElementById(this.homeBtnID).childNodes[0].style.color = 'black';
       document.getElementById(this.triggerBtnID).childNodes[0].style.color = 'black';
       document.getElementById(this.chartBtnID).childNodes[0].style.color = 'black';
-      document.getElementById(this.helpBtnID).childNodes[0].style.color = 'black';
       document.getElementById(this.userBtnID).childNodes[0].style.color = 'black';
-      document.getElementById(btnID).childNodes[0].style.color = 'rgb(66, 133, 244)';
+      document.getElementById(this.privacyBtnID).childNodes[0].style.color = 'black';
+      document.getElementById(btnID).childNodes[0].style.color = this.btnColorAct;
+    },
+
+    toggleFirstSite() {
+      if (this.$route.path === '/') {
+        document.getElementById(this.homeBtnID).childNodes[0].style.color = this.btnColorAct;
+      } else if (this.$route.path.startsWith('/statistic')) {
+        document.getElementById(this.chartBtnID).childNodes[0].style.color = this.btnColorAct;
+      } else if (this.$route.path.startsWith('/trigger')) {
+        document.getElementById(this.triggerBtnID).childNodes[0].style.color = this.btnColorAct;
+      } else if (this.$route.path.startsWith('/account')) {
+        document.getElementById(this.userBtnID).childNodes[0].style.color = this.btnColorAct;
+      } else if (this.$route.path.startsWith('/privacy')) {
+        document.getElementById(this.privacyBtnID).childNodes[0].style.color = this.btnColorAct;
+      }
     },
   },
   mounted() {
-    document.getElementById(this.homeBtnID).childNodes[0].style.color = 'rgb(66, 133, 244)';
+    this.toggleFirstSite();
   },
 };
 </script>
@@ -68,14 +78,13 @@ export default {
   }
 
   .iconText {
-    font-size: 2vh;
-    margin-top: 0vh;
+    font-size: 2vmin;
+    margin-top: 0.5vh;
   }
 
   .btn {
-    margin: 3vh 3.5vw;
-    margin-top: 5vh;
-    padding: 3vh 3vw;
+    color: black;
+    padding: 6vw;
     background: transparent;
     border: hidden;
     justify-content: center;
