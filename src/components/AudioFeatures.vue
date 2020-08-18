@@ -13,7 +13,6 @@
                     <canvas id="mfcc" width="1305" height="200"></canvas>
                 </div>
             </div>
-        <div id="prediction"></div>
         </div>
     </div>
 </template>

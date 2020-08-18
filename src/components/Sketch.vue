@@ -180,14 +180,46 @@ export default {
       this.plot_buffer();
       // predict output
       if (this.mfccHistory.length === this.mfccHistMaxLen) {
+        Vue.prototype.modelIsPredicting = true;
         const input = this.mfccHistory.slice();
         this.mfccHistory = [];
         const stacked = tfjs.stack([input, input, input], tfjs.axis = -1);
         const reshaped = stacked.reshape([1, 40, 261, 3]);
         const modelPred = this.model.predict(reshaped);
         const predLabel = this.labelDict[tfjs.argMax(modelPred, tfjs.axis = 1).dataSync()];
-        document.getElementById('prediction').innerHTML = predLabel;
+        Vue.prototype.modelIsPredicting = false;
+        this.displayPred(predLabel);
         this.savePrediction(predLabel);
+      }
+    },
+
+    displayPred(predLabel) {
+      switch (predLabel) {
+        case this.labelDict[0]:
+          document.getElementById('prediction').innerHTML = '&#x1F620;';
+          break;
+        case this.labelDict[1]:
+          document.getElementById('prediction').innerHTML = '&#x1F92E;';
+          break;
+        case this.labelDict[2]:
+          document.getElementById('prediction').innerHTML = '&#x1F628;';
+          break;
+        case this.labelDict[3]:
+          document.getElementById('prediction').innerHTML = '&#x1F600;';
+          break;
+        case this.labelDict[4]:
+          document.getElementById('prediction').innerHTML = '&#x1F610;';
+          break;
+        case this.labelDict[5]:
+          document.getElementById('prediction').innerHTML = '&#x1F62D;';
+          break;
+        case this.labelDict[6]:
+          document.getElementById('prediction').innerHTML = '&#x1F632;';
+          break;
+        case this.labelDict[7]:
+          document.getElementById('prediction').innerHTML = '&#x1F60E;';
+          break;
+        default:
       }
     },
 

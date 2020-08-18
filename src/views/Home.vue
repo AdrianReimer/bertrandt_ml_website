@@ -9,7 +9,9 @@
         </v-ons-card>
         <v-ons-list-header>Output</v-ons-list-header>
         <v-ons-card>
-          <v-ons-progress-circular indeterminate></v-ons-progress-circular>
+          <v-ons-progress-circular v-show="modelIsPredicting" indeterminate>
+          </v-ons-progress-circular>
+          <div v-show="!modelIsPredicting" id="prediction"></div>
         </v-ons-card>
       </v-ons-list>
     </v-ons-page>
@@ -25,6 +27,7 @@ export default {
     Sketch, AudioFeatures,
   },
   mounted() {
+    this.loadTut();
     this.loadPlot();
   },
   methods: {
@@ -51,16 +54,19 @@ export default {
       canvas.style.visibility = 'visible';
       document.getElementById('inputRect').appendChild(canvas);
     },
+
+    loadTut() {
+      this.$pouch.get('tutorial', {}, 'tutorial').then(() => {
+      }).catch(() => {
+        this.$router.push('/tutorial');
+      });
+    },
   },
 };
 </script>
 
 <style lang="css">
-  .homeRect {
-    border-radius: 35px;
-    background:rgb(220, 220, 220);
-    border-style: solid;
-    border-width: 0.5vh 0.5vw;
-    border-color: rgb(30, 30, 30);
+  #prediction {
+    font-size: 8vmin;
   }
 </style>

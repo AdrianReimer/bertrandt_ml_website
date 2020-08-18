@@ -3,7 +3,7 @@
     <v-ons-toolbar>
       <div class="center">Tutorial</div>
       <div class="right">
-        <ons-toolbar-button @click="$router.push('/')">
+        <ons-toolbar-button @click="saveTut(); $router.push('/')">
             Continue
         </ons-toolbar-button>
       </div>
@@ -14,30 +14,35 @@
         <div style="text-align: center; margin-top: 20px;">
             <i class="fa fa-home fa-fw" style="font-size: 50px;"></i>
             <p style="font-size: 20px;">Home </p>
+            <img class="tutImg" src="../assets/graphics/home.svg">
         </div>
       </v-ons-carousel-item>
       <v-ons-carousel-item>
         <div style="text-align: center; margin-top: 20px;">
             <i class="fa fa-pie-chart fa-fw" style="font-size: 50px;"></i>
             <p style="font-size: 20px;">Statistic </p>
+            <img class="tutImg" src="../assets/graphics/statistic.svg">
         </div>
       </v-ons-carousel-item>
       <v-ons-carousel-item>
         <div style="text-align: center; margin-top: 20px;">
             <i class="fa fa-volume-up fa-fw" style="font-size: 50px;"></i>
             <p style="font-size: 20px;">Trigger </p>
+            <img class="tutImg" src="../assets/graphics/trigger.svg">
         </div>
       </v-ons-carousel-item>
       <v-ons-carousel-item>
         <div style="text-align: center; margin-top: 20px;">
             <i class="fa fa-user fa-fw" style="font-size: 50px;"></i>
             <p style="font-size: 20px;">Account </p>
+            <img class="tutImg" src="../assets/graphics/user.svg">
         </div>
       </v-ons-carousel-item>
       <v-ons-carousel-item>
         <div style="text-align: center; margin-top: 20px;">
             <i class="fa fa-user-secret fa-fw" style="font-size: 50px;"></i>
             <p style="font-size: 20px;">Privacy </p>
+            <img class="tutImg" src="../assets/graphics/privacy.svg">
         </div>
       </v-ons-carousel-item>
     </v-ons-carousel>
@@ -68,11 +73,34 @@ export default {
         fontSize: '40px',
         color: '#fff',
         position: 'absolute',
-        bottom: '15vh',
+        bottom: '4vh',
         left: 0,
         right: 0,
       },
     };
   },
+  mounted() {
+    document.getElementById('navbar').style.visibility = false;
+    console.log(document.getElementById('navbar').style.visibility);
+  },
+  methods: {
+    saveTut() {
+      const doc = {
+        _id: 'tutorial',
+        value: true,
+      };
+      this.$pouch.put(doc, {}, 'tutorial').then(() => {
+        console.log('Tutorial finished');
+      }).catch((err) => {
+        console.error(err);
+      });
+    },
+  },
 };
 </script>
+
+<style lang="css">
+  .tutImg {
+    width: 85vw;
+  }
+</style>
