@@ -3,7 +3,7 @@
     <v-ons-toolbar>
       <div class="center">Tutorial</div>
       <div class="right">
-        <ons-toolbar-button @click="saveTut(); $router.push('/')">
+        <ons-toolbar-button @click="saveTut(); $router.push('/account/create')">
             Continue
         </ons-toolbar-button>
       </div>

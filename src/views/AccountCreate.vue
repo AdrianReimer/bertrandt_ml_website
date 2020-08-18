@@ -75,6 +75,8 @@ export default {
     };
   },
   mounted() {
+    document.getElementById('navbar').style.visibility = false;
+    console.log(document.getElementById('navbar').style.visibility);
     this.getUsers();
   },
   methods: {
@@ -132,6 +134,7 @@ export default {
           };
           this.$pouch.put(doc1, {}, 'account').then(() => {
             console.log('account saved');
+            this.$router.push('/');
           }).catch((err) => {
             console.log(err);
           });
@@ -142,6 +145,18 @@ export default {
             this.$router.push('/account');
             return this.$pouch.put(doc, {}, 'account');
           }).catch((err) => {
+            const doc2 = {
+              _id: 'userCur',
+              name: `user${this.freeUserIdx}`,
+              username,
+              email,
+            };
+            this.$pouch.put(doc2, {}, 'account').then(() => {
+              console.log('account saved');
+              this.$router.push('/');
+            }).catch((err2) => {
+              console.log(err2);
+            });
             console.log(err);
           });
         } else {
