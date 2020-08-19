@@ -7,7 +7,7 @@
 <script>
 import Vue from 'vue';
 import Meyda from 'meyda';
-import tf from '@tensorflow/tfjs';
+import * as tf from '@tensorflow/tfjs';
 import TheAudio from './TheAudio.vue';
 
 export default {
@@ -188,7 +188,7 @@ export default {
         document.getElementById('loadingCircle').style.visibility = 'visible';
         const input = this.mfccHistory.slice();
         console.log(input);
-        const stacked = tf.stack([input, input, input], tf.axis = -1);
+        const stacked = tf.stack([input, input, input]);
         const reshaped = stacked.reshape([1, 40, 261, 3]);
         const modelPred = this.model.predict(reshaped);
         const predLabel = this.labelDict[tf.argMax(modelPred, tf.axis = 1).dataSync()];
