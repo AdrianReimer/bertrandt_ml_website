@@ -1,7 +1,7 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "46daa3bf6239e329e63a",
-    "url": "/css/app.d6d89a3d.css"
+    "revision": "6bd014d8aa5169d80553",
+    "url": "/css/app.73fc2e3a.css"
   },
   {
     "revision": "11da5374465e51237266",
@@ -96,36 +96,36 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/img/fa-solid-900.49279363.svg"
   },
   {
-    "revision": "3ba8a7b9a3bcb02a46d26616a92ae58c",
-    "url": "/img/home.3ba8a7b9.svg"
+    "revision": "56ec54fcc7ce10c184cb8dac78bbaf70",
+    "url": "/img/home.56ec54fc.svg"
   },
   {
     "revision": "665921072642ed354618b32af7425a22",
     "url": "/img/ionicons.66592107.svg"
   },
   {
-    "revision": "4848731b18f872b2c0041b187e249f56",
-    "url": "/img/privacy.4848731b.svg"
+    "revision": "1eb7ca223ce18f3441482d3e15636c1c",
+    "url": "/img/privacy.1eb7ca22.svg"
   },
   {
-    "revision": "2458b084f26016d14203e402ed68da7b",
-    "url": "/img/statistic.2458b084.svg"
+    "revision": "a509b55cb26bac12ceaab7e0b9fb39e3",
+    "url": "/img/statistic.a509b55c.svg"
   },
   {
-    "revision": "4d4964e1a7ebf19caf27617650c556dd",
-    "url": "/img/trigger.4d4964e1.svg"
+    "revision": "e2adc4fa991652aa230754a443bef486",
+    "url": "/img/trigger.e2adc4fa.svg"
   },
   {
-    "revision": "7247759f845ba40536bb9c15986505d4",
-    "url": "/img/user.7247759f.svg"
+    "revision": "9f63bdec9f427e5ee0371741f1211fe7",
+    "url": "/img/user.9f63bdec.svg"
   },
   {
-    "revision": "2560311b37177615a1412e79768afe4a",
+    "revision": "eb9c2a18f01c4f55c2e739cb54bada75",
     "url": "/index.html"
   },
   {
-    "revision": "46daa3bf6239e329e63a",
-    "url": "/js/app.0d95e4c2.js"
+    "revision": "6bd014d8aa5169d80553",
+    "url": "/js/app.7b8dad6d.js"
   },
   {
     "revision": "11da5374465e51237266",

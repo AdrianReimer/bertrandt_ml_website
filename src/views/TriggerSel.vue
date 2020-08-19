@@ -2,7 +2,7 @@
   <section id="triggerSel">
     <v-ons-page style="height:90vh;">
       <v-ons-list>
-        <v-ons-list-header id="inputSel">LABEL
+        <v-ons-list-header id="inputSel" style="font-size: 4vmin; padding-bottom: 3vh">LABEL
             <v-ons-button id="closeBtn" @click="$router.push('/trigger')">
                 <i class="fa fa-times" id="closeIcon"></i>
             </v-ons-button>
@@ -79,7 +79,7 @@ export default {
 <style lang="css">
   #closeBtn {
     height: 25px;
-    width: 25px;
+    width: 35px;
     position: relative;
     float: right;
     background-color: red;
@@ -87,8 +87,9 @@ export default {
 
   #closeIcon {
     position: relative;
-    bottom: 6.5px;
-    right: 3px;
+    bottom: -3px;
+    right: 8px;
+    font-size: 7vmin;
   }
 
   .checkbox {

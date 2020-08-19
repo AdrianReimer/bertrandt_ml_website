@@ -4,14 +4,14 @@
     <Sketch />
     <v-ons-page style="height:90vh;">
       <v-ons-list>
-        <v-ons-list-header>Input</v-ons-list-header>
+        <v-ons-list-header style="font-size: 4vmin">Input</v-ons-list-header>
         <v-ons-card id="inputRect" tappable @click="$router.push('/home/selection')">
         </v-ons-card>
-        <v-ons-list-header>Output</v-ons-list-header>
+        <v-ons-list-header style="font-size: 4vmin">Output</v-ons-list-header>
         <v-ons-card>
-          <v-ons-progress-circular v-show="modelIsPredicting" indeterminate>
+          <v-ons-progress-circular id="loadingCircle" indeterminate>
           </v-ons-progress-circular>
-          <div v-show="!modelIsPredicting" id="prediction"></div>
+          <div id="prediction"></div>
         </v-ons-card>
       </v-ons-list>
     </v-ons-page>
@@ -66,7 +66,12 @@ export default {
 </script>
 
 <style lang="css">
+  #loadingCircle {
+    visibility: hidden;
+    font-size: 8vmin;
+  }
   #prediction {
+    visibility: hidden;
     font-size: 8vmin;
   }
 </style>

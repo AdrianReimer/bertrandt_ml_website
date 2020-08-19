@@ -1,5 +1,6 @@
 <template>
     <div>
+      <TheAudio />
     </div>
 </template>
 
@@ -7,8 +8,12 @@
 import Vue from 'vue';
 import Meyda from 'meyda';
 import tfjs from '@tensorflow/tfjs';
+import TheAudio from './TheAudio.vue';
 
 export default {
+  components: {
+    TheAudio,
+  },
   data() {
     return {
       model: NaN,
@@ -158,7 +163,6 @@ export default {
     },
 
     setup() {
-      console.log('setup');
       // create meyda analyzer
       // and connect to mic source
       this.onMicDataCall([this.mfccName, this.rmsName, this.bufferName], this.show)
@@ -180,17 +184,78 @@ export default {
       this.plot_buffer();
       // predict output
       if (this.mfccHistory.length === this.mfccHistMaxLen) {
-        Vue.prototype.modelIsPredicting = true;
+        document.getElementById('prediction').style.visibility = 'hidden';
+        document.getElementById('loadingCircle').style.visibility = 'visible';
         const input = this.mfccHistory.slice();
         this.mfccHistory = [];
         const stacked = tfjs.stack([input, input, input], tfjs.axis = -1);
         const reshaped = stacked.reshape([1, 40, 261, 3]);
         const modelPred = this.model.predict(reshaped);
         const predLabel = this.labelDict[tfjs.argMax(modelPred, tfjs.axis = 1).dataSync()];
-        Vue.prototype.modelIsPredicting = false;
         this.displayPred(predLabel);
+        document.getElementById('loadingCircle').style.visibility = 'hidden';
+        document.getElementById('prediction').style.visibility = 'visible';
         this.savePrediction(predLabel);
       }
+    },
+
+    playTriggersound(predLabel) {
+      this.$pouch.get('userCur', {}, 'account').then((user) => {
+        this.$pouch.get('trigger0', {}, `${user.name}trigger`).then((doc) => {
+          if (doc.value === predLabel) {
+            this.playTrigger(1);
+          }
+        }).catch((err) => {
+          console.log(err);
+        });
+        this.$pouch.get('trigger1', {}, `${user.name}trigger`).then((doc) => {
+          if (doc.value === predLabel) {
+            this.playTrigger(2);
+          }
+        }).catch((err) => {
+          console.log(err);
+        });
+        this.$pouch.get('trigger2', {}, `${user.name}trigger`).then((doc) => {
+          if (doc.value === predLabel) {
+            this.playTrigger(3);
+          }
+        }).catch((err) => {
+          console.log(err);
+        });
+      }).catch((err) => {
+        console.log(err);
+      });
+    },
+
+    playTrigger(num) {
+      this.$pouch.get('userCur', {}, 'account').then((user) => {
+        this.$pouch.get('triggerSoundVolume', {}, `${user.name}trigger`).then((doc) => {
+          doc.value = this.triggerSoundVolume;
+          let audio;
+          switch (num) {
+            case 1:
+              document.getElementById('Trigger1').volume = this.triggerSoundVolume / 100;
+              audio = document.getElementById('Trigger1');
+              audio.play();
+              break;
+            case 2:
+              document.getElementById('Trigger2').volume = this.triggerSoundVolume / 100;
+              audio = document.getElementById('Trigger2');
+              audio.play();
+              break;
+            case 3:
+              document.getElementById('Trigger3').volume = this.triggerSoundVolume / 100;
+              audio = document.getElementById('Trigger3');
+              audio.play();
+              break;
+            default:
+          }
+        }).catch((err) => {
+          console.log(err);
+        });
+      }).catch((err2) => {
+        console.log(err2);
+      });
     },
 
     displayPred(predLabel) {

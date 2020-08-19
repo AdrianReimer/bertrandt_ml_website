@@ -2,7 +2,7 @@
   <section id="accountSwitch">
     <v-ons-page style="height:90vh;">
       <v-ons-list>
-        <v-ons-list-header id="inputSel">USERS
+        <v-ons-list-header id="inputSel" style="font-size: 4vmin; padding-bottom: 3vh">USERS
             <v-ons-button id="closeBtn" @click="$router.push('/account')">
                 <i class="fa fa-times" id="closeIcon"></i>
             </v-ons-button>
@@ -11,14 +11,14 @@
                     modifier="underbar=false"
                     placeholder="Username"
                     :value="user"
-                    style="width: 100vw"
+                    style="width: 100vw; height: 8vh"
                     float>
         </ons-input>
         <ons-input id="changedEmail"
                     modifier="underbar=false"
                     placeholder="E-mail"
                     :value="email"
-                    style="width: 100vw"
+                    style="width: 100vw; height: 5vh"
                     float>
         </ons-input>
         <v-ons-alert-dialog-button tappable @click="changeUser()">
@@ -131,7 +131,7 @@ export default {
 <style lang="css">
   #closeBtn {
     height: 25px;
-    width: 25px;
+    width: 35px;
     position: relative;
     float: right;
     background-color: red;
@@ -139,8 +139,9 @@ export default {
 
   #closeIcon {
     position: relative;
-    bottom: 6.5px;
-    right: 3px;
+    bottom: -3px;
+    right: 8px;
+    font-size: 7vmin;
   }
 
   .checkbox {

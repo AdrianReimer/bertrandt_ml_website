@@ -2,7 +2,7 @@
     <section id="account">
       <v-ons-page style="height:90vh;">
         <v-ons-list>
-          <v-ons-list-header>User</v-ons-list-header>
+          <v-ons-list-header style="font-size: 4vmin">User</v-ons-list-header>
           <v-ons-list-item>
             <label class="left">
               Name: {{ name }}
@@ -13,7 +13,7 @@
               E-mail: {{ email }}
             </label>
           </v-ons-list-item>
-          <v-ons-list-header>Settings</v-ons-list-header>
+          <v-ons-list-header style="font-size: 4vmin">Settings</v-ons-list-header>
             <v-ons-list>
               <ons-list-item tappable
               @click="$router.push('/account/create')">
@@ -33,7 +33,7 @@
               </ons-list-item>
               <ons-list-item>
                 <label class="center" for="switch1">
-                  Daily Emotion overview {{ dailyEmotionSwitchOn ? '(on)' : '(off)' }}
+                  Daily Emotion overview
                 </label>
                 <div class="right">
                   <v-ons-switch input-id="switch1" v-model="dailyEmotionSwitchOn"

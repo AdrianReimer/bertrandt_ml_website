@@ -147,7 +147,11 @@ export default {
 
 <style lang="css">
   .chart-container {
-      width: 100vw;
-      height: 78vh;
+    width: 100vw;
+    height: 78vh;
+  }
+
+  #statRect {
+    padding: 6vmin;
   }
 </style>

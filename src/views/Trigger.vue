@@ -3,7 +3,7 @@
       <TheAudio />
       <v-ons-page style="height:90vh;">
         <v-ons-list>
-          <v-ons-list-header>Sound</v-ons-list-header>
+          <v-ons-list-header style="font-size: 4vmin">Sound</v-ons-list-header>
           <v-ons-list-item v-for="(triggerSound, $index) in triggerSounds"
           v-bind:key="triggerSound" tappable>
             <label class="left">
@@ -23,7 +23,7 @@
               </v-ons-button>
             </div>
           </v-ons-list-item>
-          <v-ons-list-header>Settings</v-ons-list-header>
+          <v-ons-list-header style="font-size: 4vmin">Settings</v-ons-list-header>
             <v-ons-list>
               <v-ons-list-item>
                 Adjust the volume:
@@ -116,7 +116,6 @@ export default {
           };
           this.$pouch.put(doc, {}, `${user.name}trigger`).then(() => {
             console.log('Trigger sound saved');
-            this.$router.push('/trigger/selection');
           }).catch((err) => {
             console.error(err);
           });
@@ -132,7 +131,8 @@ export default {
             _id: 'triggerCur',
             value: triggerNum,
           };
-          this.$pouch.put(doc, {}, `${user.username}trigger`).then(() => {
+          this.$pouch.put(doc, {}, `${user.name}trigger`).then(() => {
+            this.$router.push('/trigger/selection');
             console.log('Trigger sound saved');
           }).catch((err) => {
             console.error(err);

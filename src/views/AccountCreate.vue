@@ -2,7 +2,7 @@
   <section id="accountCreate">
     <v-ons-page style="height:90vh;">
       <v-ons-list>
-        <v-ons-list-header id="inputSel">USERS
+        <v-ons-list-header id="inputSel" style="font-size: 4vmin; padding-bottom: 3vh">USERS
             <v-ons-button id="closeBtn" @click="$router.push('/account')">
                 <i class="fa fa-times" id="closeIcon"></i>
             </v-ons-button>
@@ -10,13 +10,13 @@
       <ons-input id="newUsername"
                  modifier="underbar=false"
                  placeholder="Username"
-                 style="width: 100vw"
+                 style="width: 100vw; height: 8vh"
                  float>
       </ons-input>
       <ons-input id="newEmail"
                  modifier="underbar=false"
                  placeholder="E-mail"
-                 style="width: 100vw"
+                 style="width: 100vw; height: 5vh"
                  float>
       </ons-input>
       <v-ons-alert-dialog-button @click="createUser()">
@@ -75,8 +75,6 @@ export default {
     };
   },
   mounted() {
-    document.getElementById('navbar').style.visibility = false;
-    console.log(document.getElementById('navbar').style.visibility);
     this.getUsers();
   },
   methods: {
@@ -173,7 +171,7 @@ export default {
 <style lang="css">
   #closeBtn {
     height: 25px;
-    width: 25px;
+    width: 35px;
     position: relative;
     float: right;
     background-color: red;
@@ -181,8 +179,9 @@ export default {
 
   #closeIcon {
     position: relative;
-    bottom: 6.5px;
-    right: 3px;
+    bottom: -3px;
+    right: 8px;
+    font-size: 7vmin;
   }
 
   .checkbox {

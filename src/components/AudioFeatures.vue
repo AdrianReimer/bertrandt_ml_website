@@ -4,7 +4,7 @@
             <div id="bufferBar">
                 <div id="buffer_mover"> Raw audio </div>
                 <div class="buffer-info" id="buffer-info">
-                    <canvas id="buffer" width="1305" height="200"></canvas>
+                    <canvas id="buffer" width="500" height="200"></canvas>
                 </div>
             </div>
             <div id="mfccBar">
@@ -51,8 +51,9 @@
     }
 
     #buffer {
-        height: 30vh;
+        height: 27vh;
         width: 100vw;
+        padding-left: 0vw;
     }
 
     #mfccBar {
