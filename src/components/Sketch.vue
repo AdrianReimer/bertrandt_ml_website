@@ -7,7 +7,7 @@
 <script>
 import Vue from 'vue';
 import Meyda from 'meyda';
-import tfjs from '@tensorflow/tfjs';
+import tf from '@tensorflow/tfjs';
 import TheAudio from './TheAudio.vue';
 
 export default {
@@ -150,7 +150,7 @@ export default {
     },
 
     loadModel() {
-      tfjs.loadLayersModel('https://www.adrianreimer.com/model/model.json').then((loadedModel) => {
+      tf.loadLayersModel('https://www.adrianreimer.com/model/model.json').then((loadedModel) => {
         this.model = loadedModel;
       });
     },
@@ -187,14 +187,15 @@ export default {
         document.getElementById('prediction').style.visibility = 'hidden';
         document.getElementById('loadingCircle').style.visibility = 'visible';
         const input = this.mfccHistory.slice();
-        this.mfccHistory = [];
-        const stacked = tfjs.stack([input, input, input], tfjs.axis = -1);
+        console.log(input);
+        const stacked = tf.stack([input, input, input], tf.axis = -1);
         const reshaped = stacked.reshape([1, 40, 261, 3]);
         const modelPred = this.model.predict(reshaped);
-        const predLabel = this.labelDict[tfjs.argMax(modelPred, tfjs.axis = 1).dataSync()];
+        const predLabel = this.labelDict[tf.argMax(modelPred, tf.axis = 1).dataSync()];
         this.displayPred(predLabel);
         document.getElementById('loadingCircle').style.visibility = 'hidden';
         document.getElementById('prediction').style.visibility = 'visible';
+        this.mfccHistory = [];
         this.savePrediction(predLabel);
       }
     },
