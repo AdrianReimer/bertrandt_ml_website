@@ -163,6 +163,7 @@ export default {
     },
 
     setup() {
+      this.loadModel();
       // create meyda analyzer
       // and connect to mic source
       this.onMicDataCall([this.mfccName, this.rmsName, this.bufferName], this.show)
@@ -190,6 +191,7 @@ export default {
         console.log(input);
         const stacked = tf.stack([input, input, input]);
         const reshaped = stacked.reshape([1, 40, 261, 3]);
+        console.log(this.model);
         const modelPred = this.model.predict(reshaped);
         const predLabel = this.labelDict[tf.argMax(modelPred, tf.axis = 1).dataSync()];
         this.displayPred(predLabel);

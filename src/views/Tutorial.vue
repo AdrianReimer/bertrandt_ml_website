@@ -47,6 +47,8 @@
 </template>
 
 <script>
+import Vue from 'vue';
+
 export default {
   data() {
     return {
@@ -70,6 +72,12 @@ export default {
     };
   },
   mounted() {
+    try {
+      Vue.prototype.stopDraw();
+    } catch {
+      console.log('stopDraw function not defined');
+    }
+    this.loadData();
     document.getElementById('navbar').style.visibility = false;
     console.log(document.getElementById('navbar').style.visibility);
   },
