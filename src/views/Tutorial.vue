@@ -77,9 +77,6 @@ export default {
     } catch {
       console.log('stopDraw function not defined');
     }
-    this.loadData();
-    document.getElementById('navbar').style.visibility = false;
-    console.log(document.getElementById('navbar').style.visibility);
   },
   methods: {
     saveTut() {

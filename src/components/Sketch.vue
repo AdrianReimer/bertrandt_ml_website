@@ -150,7 +150,7 @@ export default {
     },
 
     loadModel() {
-      tf.loadLayersModel('https://www.adrianreimer.com/model/model.json').then((loadedModel) => {
+      tf.loadLayersModel('https://www.adrianreimer.com:2020/model/model.json').then((loadedModel) => {
         this.model = loadedModel;
       });
     },
