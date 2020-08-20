@@ -38,7 +38,7 @@ export default {
       redColor: 150,
       greenColor: 144,
       blueColor: 120,
-      curMfcc: new Array(40).fill(0.01),
+      curMfcc: new Array(40).fill(1),
       curRms: 0,
       curBuffer: 0,
       mfccHistory: [],
@@ -105,27 +105,29 @@ export default {
       this.mfccCanvas = document.getElementById('mfcc');
       this.mfccCtx = this.mfccCanvas.getContext('2d');
       if (this.mfccHistory.length) {
-        for (let y = 0; y < this.mfccHistory[this.mfccHistory.length - 1].length; y += 1) {
+        let x = this.mfccHistory.length - 1;
+        for (let y = 0; y < this.mfccHistory[x].length; y += 1) {
           // setting color
-          if (this.mfccHistory[this.mfccHistory.length - 1][y] >= -300) {
+          if (this.mfccHistory[x][y] >= -300) {
             this.mfccCtx.fillStyle = `rgb(255, ${
-              this.greenColor + this.mfccHistory[this.mfccHistory.length - 1][y]
+              this.greenColor + this.mfccHistory[x][y]
             },${
-              this.blueColor + this.mfccHistory[this.mfccHistory.length - 1][y]
+              this.blueColor + this.mfccHistory[x][y]
             })`;
           } else {
             this.mfccCtx.fillStyle = `rgb(${
-              this.redColor + this.mfccHistory[this.mfccHistory.length - 1][y]
+              this.redColor + this.mfccHistory[x][y]
             },${
-              this.greenColor + this.mfccHistory[this.mfccHistory.length - 1][y]
+              this.greenColor + this.mfccHistory[x][y]
             }, 255)`;
           }
           // drawing the rectangle
-          this.mfccCtx.fillRect(this.mfccHistory.length - 1 * this.boxWidth,
+          this.mfccCtx.fillRect(x * this.boxWidth,
             y * this.boxHeight,
             this.boxWidth,
             this.boxHeight);
         }
+        x = 0;
       }
     },
 
@@ -179,7 +181,7 @@ export default {
       if (this.curRms > this.ThresRms) {
         this.mfccHistory.push(this.curMfcc);
       } else {
-        this.mfccHistory.push(new Array(40).fill(0.01));
+        this.mfccHistory.push(new Array(40).fill(1));
       }
       // plot
       if (document.getElementById('mfccBar').style.visibility === 'visible') {
