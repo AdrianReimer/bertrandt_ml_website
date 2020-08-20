@@ -37,12 +37,21 @@ export default {
   },
   methods: {
     toggleIcon(btnID) {
-      document.getElementById(this.homeBtnID).childNodes[1].style.color = 'black';
-      document.getElementById(this.triggerBtnID).childNodes[1].style.color = 'black';
-      document.getElementById(this.chartBtnID).childNodes[1].style.color = 'black';
-      document.getElementById(this.userBtnID).childNodes[1].style.color = 'black';
-      document.getElementById(this.privacyBtnID).childNodes[1].style.color = 'black';
-      document.getElementById(btnID).childNodes[1].style.color = this.btnColorAct;
+      if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        document.getElementById(this.homeBtnID).childNodes[1].style.color = 'black';
+        document.getElementById(this.triggerBtnID).childNodes[1].style.color = 'black';
+        document.getElementById(this.chartBtnID).childNodes[1].style.color = 'black';
+        document.getElementById(this.userBtnID).childNodes[1].style.color = 'black';
+        document.getElementById(this.privacyBtnID).childNodes[1].style.color = 'black';
+        document.getElementById(btnID).childNodes[1].style.color = this.btnColorAct;
+      } else {
+        document.getElementById(this.homeBtnID).childNodes[0].style.color = 'black';
+        document.getElementById(this.triggerBtnID).childNodes[0].style.color = 'black';
+        document.getElementById(this.chartBtnID).childNodes[0].style.color = 'black';
+        document.getElementById(this.userBtnID).childNodes[0].style.color = 'black';
+        document.getElementById(this.privacyBtnID).childNodes[0].style.color = 'black';
+        document.getElementById(btnID).childNodes[0].style.color = this.btnColorAct;
+      }
     },
 
     toggleFirstSite() {
