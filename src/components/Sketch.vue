@@ -377,16 +377,12 @@ export default {
         this.setup();
         Vue.prototype.drawFuncIntervalId = setInterval(this.draw, 16);
         Vue.prototype.drawFuncIsAct = true;
-      } else {
-        clearInterval(Vue.prototype.drawFuncIntervalId);
-        Vue.prototype.drawFuncIntervalId = setInterval(this.draw, 16);
-        Vue.prototype.drawFuncIsAct = true;
       }
     },
 
     stopDraw() {
       clearInterval(Vue.prototype.drawFuncIntervalId);
-      Vue.prototype.drawFuncIsAct = 0;
+      Vue.prototype.drawFuncIsAct = undefined;
     },
   },
   mounted() {
