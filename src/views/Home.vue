@@ -34,10 +34,8 @@ export default {
     loadPlot() {
       this.$pouch.get('userCur', {}, 'account').then((user) => {
         this.$pouch.get('plot', {}, `${user.name}home`).then((doc) => {
-          const canvas = document.getElementById(`${doc.plotType}Bar`);
-          canvas.style.position = 'relative';
-          canvas.style.visibility = 'visible';
-          document.getElementById('inputRect').appendChild(canvas);
+          document.getElementById(`${doc.plotType}Bar`).style.visibility = 'visible';
+          document.getElementById('inputRect').appendChild(document.getElementById(`${doc.plotType}Bar`));
         }).catch((err) => {
           console.error(err);
           this.addDefaultPlot();
@@ -49,10 +47,8 @@ export default {
     },
 
     addDefaultPlot() {
-      const canvas = document.getElementById('mfccBar');
-      canvas.style.position = 'relative';
-      canvas.style.visibility = 'visible';
-      document.getElementById('inputRect').appendChild(canvas);
+      document.getElementById('mfccBar').style.visibility = 'visible';
+      document.getElementById('inputRect').appendChild(document.getElementById('mfccBar'));
     },
 
     loadTut() {

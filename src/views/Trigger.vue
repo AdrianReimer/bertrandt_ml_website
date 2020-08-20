@@ -115,6 +115,7 @@ export default {
             state: true,
           };
           this.$pouch.put(doc, {}, `${user.name}trigger`).then(() => {
+            this.$router.push('/trigger/selection');
             console.log('Trigger sound saved');
           }).catch((err) => {
             console.error(err);

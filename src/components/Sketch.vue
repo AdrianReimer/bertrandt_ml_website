@@ -38,12 +38,16 @@ export default {
       redColor: 150,
       greenColor: 144,
       blueColor: 120,
-      curMfcc: new Array(40).fill(0),
+      curMfcc: new Array(40).fill(0.01),
       curRms: 0,
       curBuffer: 0,
       mfccHistory: [],
       canvas: 0,
       ctx: 0,
+      mfccCanvas: 0,
+      mfccCtx: 0,
+      bufferCanvas: 0,
+      bufferCtx: 0,
     };
   },
   methods: {
@@ -98,28 +102,26 @@ export default {
     },
 
     plot_mfcc() {
-      const mfccCanvas = document.getElementById('mfcc');
-      const mfccCtx = mfccCanvas.getContext('2d');
+      this.mfccCanvas = document.getElementById('mfcc');
+      this.mfccCtx = this.mfccCanvas.getContext('2d');
       if (this.mfccHistory.length) {
-        const x = this.mfccHistory.length - 1;
-        for (let y = 0; y < this.mfccHistory[x].length; y += 1) {
-          const colorStr = this.mfccHistory[x][y];
+        for (let y = 0; y < this.mfccHistory[this.mfccHistory.length - 1].length; y += 1) {
           // setting color
-          if (this.mfccHistory[x][y] >= -300) {
-            mfccCtx.fillStyle = `rgb(255, ${
-              this.greenColor + colorStr
+          if (this.mfccHistory[this.mfccHistory.length - 1][y] >= -300) {
+            this.mfccCtx.fillStyle = `rgb(255, ${
+              this.greenColor + this.mfccHistory[this.mfccHistory.length - 1][y]
             },${
-              this.blueColor + colorStr
+              this.blueColor + this.mfccHistory[this.mfccHistory.length - 1][y]
             })`;
           } else {
-            mfccCtx.fillStyle = `rgb(${
-              this.redColor + colorStr
+            this.mfccCtx.fillStyle = `rgb(${
+              this.redColor + this.mfccHistory[this.mfccHistory.length - 1][y]
             },${
-              this.greenColor + colorStr
+              this.greenColor + this.mfccHistory[this.mfccHistory.length - 1][y]
             }, 255)`;
           }
           // drawing the rectangle
-          mfccCtx.fillRect(x * this.boxWidth,
+          this.mfccCtx.fillRect(this.mfccHistory.length - 1 * this.boxWidth,
             y * this.boxHeight,
             this.boxWidth,
             this.boxHeight);
@@ -128,17 +130,17 @@ export default {
     },
 
     plot_buffer() {
-      const bufferCanvas = document.getElementById('buffer');
-      const bufferCtx = bufferCanvas.getContext('2d');
+      this.bufferCanvas = document.getElementById('buffer');
+      this.bufferCtx = this.bufferCanvas.getContext('2d');
       if (this.curBuffer.length) {
-        bufferCtx.clearRect(0, 0, bufferCanvas.width, bufferCanvas.height);
+        this.bufferCtx.clearRect(0, 0, this.bufferCanvas.width, this.bufferCanvas.height);
         let bufferIdx = 0;
         for (let i = 0; i < this.curBuffer.length; i += 1) {
           const colorStr = this.curBuffer[i] * 500;
           // setting color
-          bufferCtx.fillStyle = 'rgb(30, 30, 30)';
+          this.bufferCtx.fillStyle = 'rgb(30, 30, 30)';
           // drawing the rectangle
-          bufferCtx.fillRect(bufferIdx,
+          this.bufferCtx.fillRect(bufferIdx,
             colorStr + 100,
             1.5,
             1.5);
@@ -177,7 +179,7 @@ export default {
       if (this.curRms > this.ThresRms) {
         this.mfccHistory.push(this.curMfcc);
       } else {
-        this.mfccHistory.push(new Array(40).fill(0));
+        this.mfccHistory.push(new Array(40).fill(0.01));
       }
       // plot
       if (document.getElementById('mfccBar').style.visibility === 'visible') {
@@ -373,12 +375,16 @@ export default {
         this.setup();
         Vue.prototype.drawFuncIntervalId = setInterval(this.draw, 16);
         Vue.prototype.drawFuncIsAct = true;
+      } else {
+        clearInterval(Vue.prototype.drawFuncIntervalId);
+        Vue.prototype.drawFuncIntervalId = setInterval(this.draw, 16);
+        Vue.prototype.drawFuncIsAct = true;
       }
     },
 
     stopDraw() {
       clearInterval(Vue.prototype.drawFuncIntervalId);
-      Vue.prototype.drawFuncIsAct = undefined;
+      Vue.prototype.drawFuncIsAct = 0;
     },
   },
   mounted() {
