@@ -38,9 +38,7 @@ export default {
       redColor: 150,
       greenColor: 144,
       blueColor: 120,
-      silence: true,
-      isReset: true,
-      curMfcc: this.DEFAULT_MFCC_VALUE,
+      curMfcc: new Array(40).fill(0),
       curRms: 0,
       curBuffer: 0,
       mfccHistory: [],
@@ -178,20 +176,27 @@ export default {
       // append new mfcc values
       if (this.curRms > this.ThresRms) {
         this.mfccHistory.push(this.curMfcc);
-        this.silence = false;
+      } else {
+        this.mfccHistory.push(new Array(40).fill(0));
       }
-      // plot new mfcc snippet
-      this.plot_mfcc();
-      this.plot_buffer();
-      // predict output
-      if (this.mfccHistory.length === this.mfccHistMaxLen) {
+      // plot
+      if (document.getElementById('mfccBar').style.visibility === 'visible') {
+        this.plot_mfcc();
+      } else if (document.getElementById('bufferBar').style.visibility === 'visible') {
+        this.plot_buffer();
+      } else {
+        this.plot_mfcc();
+        this.plot_buffer();
+      }
+      if (this.mfccHistory.length === this.mfccHistMaxLen - 1) {
         document.getElementById('prediction').style.visibility = 'hidden';
         document.getElementById('loadingCircle').style.visibility = 'visible';
+      }
+      if (this.mfccHistory.length === this.mfccHistMaxLen) {
+        // predict output
         const input = this.mfccHistory.slice();
-        console.log(input);
         const stacked = tf.stack([input, input, input]);
         const reshaped = stacked.reshape([1, 40, 261, 3]);
-        console.log(this.model);
         const modelPred = this.model.predict(reshaped);
         const predLabel = this.labelDict[tf.argMax(modelPred, tf.axis = 1).dataSync()];
         this.displayPred(predLabel);
@@ -200,6 +205,77 @@ export default {
         this.mfccHistory = [];
         this.savePrediction(predLabel);
       }
+    },
+
+    savePrediction(predLabel) {
+      // get current Day
+      const today = new Date();
+      const dd = String(today.getDate()).padStart(2, '0');
+      const mm = String(today.getMonth() + 1).padStart(2, '0');
+      const year = today.getFullYear();
+      const day = `${dd}${mm}${year}`;
+      const week = `${parseInt((dd / 7) + (mm * 4), 10)}${year}`;
+      const month = `${mm}${year}`;
+      this.$pouch.get('userCur', {}, 'account').then((user) => {
+        // save day data
+        this.$pouch.get(`${day}${predLabel}`, {}, `${user.name}home`).then((doc) => {
+          doc.value += 1;
+        }).catch(() => {
+          const docInit = {
+            _id: `${day}${predLabel}`,
+            value: 1,
+          };
+          this.$pouch.put(docInit, {}, `${user.name}home`).then(() => {
+            console.log('day data saved');
+          }).catch((err) => {
+            console.log(err);
+          });
+        });
+        // save week data
+        this.$pouch.get(`${week}${predLabel}`, {}, `${user.name}home`).then((doc) => {
+          doc.value += 1;
+        }).catch(() => {
+          const docInit = {
+            _id: `${week}${predLabel}`,
+            value: 1,
+          };
+          this.$pouch.put(docInit, {}, `${user.name}home`).then(() => {
+            console.log('week data saved');
+          }).catch((err) => {
+            console.log(err);
+          });
+        });
+        // save month data
+        this.$pouch.get(`${month}${predLabel}`, {}, `${user.name}home`).then((doc) => {
+          doc.value += 1;
+        }).catch(() => {
+          const docInit = {
+            _id: `${month}${predLabel}`,
+            value: 1,
+          };
+          this.$pouch.put(docInit, {}, `${user.name}home`).then(() => {
+            console.log('month data saved');
+          }).catch((err) => {
+            console.log(err);
+          });
+        });
+        // save year data
+        this.$pouch.get(`${year}${predLabel}`, {}, `${user.name}home`).then((doc) => {
+          doc.value += 1;
+        }).catch(() => {
+          const docInit = {
+            _id: `${year}${predLabel}`,
+            value: 1,
+          };
+          this.$pouch.put(docInit, {}, `${user.name}home`).then(() => {
+            console.log('year data saved');
+          }).catch((err) => {
+            console.log(err);
+          });
+        });
+      }).catch((err) => {
+        console.log(err);
+      });
     },
 
     playTriggersound(predLabel) {

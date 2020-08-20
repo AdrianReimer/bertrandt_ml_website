@@ -97,6 +97,6 @@ export default {
 <style lang="css">
   .tutImg {
     height: 68vh;
-    width: 100vw;
+    width: 90vw;
   }
 </style>
