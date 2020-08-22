@@ -63,10 +63,12 @@ export default {
 
 <style lang="css">
   #loadingCircle {
+    position: relative;
     visibility: hidden;
     font-size: 8vmin;
   }
   #prediction {
+    position: relative;
     visibility: hidden;
     font-size: 8vmin;
   }

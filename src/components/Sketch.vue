@@ -38,6 +38,7 @@ export default {
       redColor: 150,
       greenColor: 144,
       blueColor: 120,
+      defaultMfcc: new Array(40).fill(1),
       curMfcc: new Array(40).fill(1),
       curRms: 0,
       curBuffer: 0,
@@ -48,6 +49,7 @@ export default {
       mfccCtx: 0,
       bufferCanvas: 0,
       bufferCtx: 0,
+      loadingIsVisible: false,
     };
   },
   methods: {
@@ -102,8 +104,6 @@ export default {
     },
 
     plot_mfcc() {
-      this.mfccCanvas = document.getElementById('mfcc');
-      this.mfccCtx = this.mfccCanvas.getContext('2d');
       if (this.mfccHistory.length) {
         let x = this.mfccHistory.length - 1;
         for (let y = 0; y < this.mfccHistory[x].length; y += 1) {
@@ -132,8 +132,6 @@ export default {
     },
 
     plot_buffer() {
-      this.bufferCanvas = document.getElementById('buffer');
-      this.bufferCtx = this.bufferCanvas.getContext('2d');
       if (this.curBuffer.length) {
         this.bufferCtx.clearRect(0, 0, this.bufferCanvas.width, this.bufferCanvas.height);
         let bufferIdx = 0;
@@ -165,12 +163,18 @@ export default {
     },
 
     setup() {
+      this.mfccCanvas = document.getElementById('mfcc');
+      this.mfccCtx = this.mfccCanvas.getContext('2d');
+      this.bufferCanvas = document.getElementById('buffer');
+      this.bufferCtx = this.bufferCanvas.getContext('2d');
       this.loadModel();
       // create meyda analyzer
       // and connect to mic source
       this.onMicDataCall([this.mfccName, this.rmsName, this.bufferName], this.show)
         .then((meydaAnalyzer) => {
           meydaAnalyzer.start();
+          Vue.prototype.drawFuncIntervalId = setInterval(this.draw, 16);
+          Vue.prototype.drawFuncIsAct = true;
         }).catch((err) => {
           alert(err);
         });
@@ -181,34 +185,41 @@ export default {
       if (this.curRms > this.ThresRms) {
         this.mfccHistory.push(this.curMfcc);
       } else {
-        this.mfccHistory.push(new Array(40).fill(1));
+        this.mfccHistory.push(this.defaultMfcc);
       }
       // plot
       if (document.getElementById('mfccBar').style.visibility === 'visible') {
         this.plot_mfcc();
-      } else if (document.getElementById('bufferBar').style.visibility === 'visible') {
-        this.plot_buffer();
       } else {
-        this.plot_mfcc();
         this.plot_buffer();
-      }
-      if (this.mfccHistory.length === this.mfccHistMaxLen - 1) {
-        document.getElementById('prediction').style.visibility = 'hidden';
-        document.getElementById('loadingCircle').style.visibility = 'visible';
       }
       if (this.mfccHistory.length === this.mfccHistMaxLen) {
         // predict output
-        const input = this.mfccHistory.slice();
-        const stacked = tf.stack([input, input, input]);
-        const reshaped = stacked.reshape([1, 40, 261, 3]);
-        const modelPred = this.model.predict(reshaped);
-        const predLabel = this.labelDict[tf.argMax(modelPred, tf.axis = 1).dataSync()];
-        this.displayPred(predLabel);
+        this.predict(this.mfccHistory.slice());
+        this.mfccHistory = [];
+      }
+    },
+
+    toggleOutput() {
+      if (this.loadingIsVisible) {
         document.getElementById('loadingCircle').style.visibility = 'hidden';
         document.getElementById('prediction').style.visibility = 'visible';
-        this.mfccHistory = [];
-        this.savePrediction(predLabel);
+      } else {
+        document.getElementById('prediction').style.visibility = 'hidden';
+        document.getElementById('loadingCircle').style.visibility = 'visible';
       }
+      this.loadingIsVisible = !this.loadingIsVisible;
+    },
+
+    async predict(input) {
+      this.toggleOutput();
+      const stacked = tf.stack([input, input, input]);
+      const reshaped = stacked.reshape([1, 40, 261, 3]);
+      const modelPred = this.model.predict(reshaped);
+      const predLabel = this.labelDict[tf.argMax(modelPred, tf.axis = 1).dataSync()];
+      this.displayPred(predLabel);
+      this.toggleOutput();
+      this.savePrediction(predLabel);
     },
 
     savePrediction(predLabel) {
@@ -224,6 +235,7 @@ export default {
         // save day data
         this.$pouch.get(`${day}${predLabel}`, {}, `${user.name}home`).then((doc) => {
           doc.value += 1;
+          return this.$pouch.put(doc, {}, `${user.name}home`);
         }).catch(() => {
           const docInit = {
             _id: `${day}${predLabel}`,
@@ -238,6 +250,7 @@ export default {
         // save week data
         this.$pouch.get(`${week}${predLabel}`, {}, `${user.name}home`).then((doc) => {
           doc.value += 1;
+          return this.$pouch.put(doc, {}, `${user.name}home`);
         }).catch(() => {
           const docInit = {
             _id: `${week}${predLabel}`,
@@ -252,6 +265,7 @@ export default {
         // save month data
         this.$pouch.get(`${month}${predLabel}`, {}, `${user.name}home`).then((doc) => {
           doc.value += 1;
+          return this.$pouch.put(doc, {}, `${user.name}home`);
         }).catch(() => {
           const docInit = {
             _id: `${month}${predLabel}`,
@@ -266,6 +280,7 @@ export default {
         // save year data
         this.$pouch.get(`${year}${predLabel}`, {}, `${user.name}home`).then((doc) => {
           doc.value += 1;
+          return this.$pouch.put(doc, {}, `${user.name}home`);
         }).catch(() => {
           const docInit = {
             _id: `${year}${predLabel}`,
@@ -375,8 +390,6 @@ export default {
       if (Vue.prototype.drawFuncIsAct === undefined) {
         Vue.prototype.stopDraw = this.stopDraw;
         this.setup();
-        Vue.prototype.drawFuncIntervalId = setInterval(this.draw, 16);
-        Vue.prototype.drawFuncIsAct = true;
       }
     },
 
