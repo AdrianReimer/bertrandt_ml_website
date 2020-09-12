@@ -170,8 +170,8 @@ export default {
       // and connect to mic source
       this.onMicDataCall([this.mfccName, this.rmsName, this.bufferName], this.show)
         .then((meydaAnalyzer) => {
-          meydaAnalyzer.start();
           Vue.prototype.meydaAnalyzer = meydaAnalyzer;
+          Vue.prototype.meydaAnalyzer.start();
         }).catch((err) => {
           alert(err);
         });
@@ -182,6 +182,7 @@ export default {
       this.mfccCtx = this.mfccCanvas.getContext('2d');
       this.bufferCanvas = document.getElementById('buffer');
       this.bufferCtx = this.bufferCanvas.getContext('2d');
+      console.log(Vue.prototype.meydaAnalyzer);
       Vue.prototype.meydaAnalyzer.start();
       Vue.prototype.drawFuncIntervalId = setInterval(this.draw, 16);
       Vue.prototype.drawFuncIsAct = true;
@@ -411,7 +412,6 @@ export default {
     stopDraw() {
       clearInterval(Vue.prototype.drawFuncIntervalId);
       Vue.prototype.drawFuncIsAct = false;
-      Vue.prototype.meydaAnalyzer.stop();
     },
   },
   mounted() {
