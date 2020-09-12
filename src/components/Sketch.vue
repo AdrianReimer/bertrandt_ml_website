@@ -171,8 +171,6 @@ export default {
       this.onMicDataCall([this.mfccName, this.rmsName, this.bufferName], this.show)
         .then((meydaAnalyzer) => {
           meydaAnalyzer.start();
-          Vue.prototype.drawFuncIntervalId = setInterval(this.draw, 16);
-          Vue.prototype.drawFuncIsAct = true;
         }).catch((err) => {
           alert(err);
         });
@@ -393,8 +391,11 @@ export default {
       if (Vue.prototype.drawFuncIsAct === undefined) {
         this.loadModel();
         Vue.prototype.stopDraw = this.stopDraw;
+        this.setup();
+      } else {
+        Vue.prototype.drawFuncIntervalId = setInterval(this.draw, 16);
+        Vue.prototype.drawFuncIsAct = true;
       }
-      this.setup();
     },
 
     stopDraw() {
