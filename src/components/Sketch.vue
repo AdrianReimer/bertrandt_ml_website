@@ -180,6 +180,15 @@ export default {
         });
     },
 
+    continue() {
+      this.mfccCanvas = document.getElementById('mfcc');
+      this.mfccCtx = this.mfccCanvas.getContext('2d');
+      this.bufferCanvas = document.getElementById('buffer');
+      this.bufferCtx = this.bufferCanvas.getContext('2d');
+      Vue.prototype.drawFuncIntervalId = setInterval(this.draw, 16);
+      Vue.prototype.drawFuncIsAct = true;
+    },
+
     draw() {
       // append new mfcc values
       if (this.curRms > this.ThresRms) {
@@ -188,10 +197,10 @@ export default {
         this.mfccHistory.push(this.defaultMfcc);
       }
       // plot
-      if (document.getElementById('mfccBar').style.visibility === 'visible') {
-        this.plot_mfcc();
-      } else {
+      if (document.getElementById('bufferBar').style.visibility === 'visible') {
         this.plot_buffer();
+      } else {
+        this.plot_mfcc();
       }
       if (this.mfccHistory.length === this.mfccHistMaxLen) {
         // predict output
@@ -212,11 +221,13 @@ export default {
     },
 
     async predict(input) {
+      this.playTriggersound('Angry');
       this.toggleOutput();
       const stacked = tf.stack([input, input, input]);
       const reshaped = stacked.reshape([1, 40, 261, 3]);
       const modelPred = this.model.predict(reshaped);
       const predLabel = this.labelDict[tf.argMax(modelPred, tf.axis = 1).dataSync()];
+      this.playTriggersound(predLabel);
       this.displayPred(predLabel);
       this.toggleOutput();
       this.savePrediction(predLabel);
@@ -300,21 +311,21 @@ export default {
     playTriggersound(predLabel) {
       this.$pouch.get('userCur', {}, 'account').then((user) => {
         this.$pouch.get('trigger0', {}, `${user.name}trigger`).then((doc) => {
-          if (doc.value === predLabel) {
+          if (doc.state === true && doc.value === predLabel) {
             this.playTrigger(1);
           }
         }).catch((err) => {
           console.log(err);
         });
         this.$pouch.get('trigger1', {}, `${user.name}trigger`).then((doc) => {
-          if (doc.value === predLabel) {
+          if (doc.state === true && doc.value === predLabel) {
             this.playTrigger(2);
           }
         }).catch((err) => {
           console.log(err);
         });
         this.$pouch.get('trigger2', {}, `${user.name}trigger`).then((doc) => {
-          if (doc.value === predLabel) {
+          if (doc.state === true && doc.value === predLabel) {
             this.playTrigger(3);
           }
         }).catch((err) => {
@@ -328,7 +339,11 @@ export default {
     playTrigger(num) {
       this.$pouch.get('userCur', {}, 'account').then((user) => {
         this.$pouch.get('triggerSoundVolume', {}, `${user.name}trigger`).then((doc) => {
-          doc.value = this.triggerSoundVolume;
+          if (doc.value === undefined) {
+            this.triggerSoundVolume = 50;
+          } else {
+            this.triggerSoundVolume = doc.value;
+          }
           let audio;
           switch (num) {
             case 1:
@@ -390,12 +405,14 @@ export default {
       if (Vue.prototype.drawFuncIsAct === undefined) {
         Vue.prototype.stopDraw = this.stopDraw;
         this.setup();
+      } else {
+        this.continue();
       }
     },
 
     stopDraw() {
       clearInterval(Vue.prototype.drawFuncIntervalId);
-      Vue.prototype.drawFuncIsAct = undefined;
+      Vue.prototype.drawFuncIsAct = false;
     },
   },
   mounted() {
