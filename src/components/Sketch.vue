@@ -185,6 +185,7 @@ export default {
       this.mfccCtx = this.mfccCanvas.getContext('2d');
       this.bufferCanvas = document.getElementById('buffer');
       this.bufferCtx = this.bufferCanvas.getContext('2d');
+      this.loadModel();
       Vue.prototype.drawFuncIntervalId = setInterval(this.draw, 16);
       Vue.prototype.drawFuncIsAct = true;
     },
@@ -221,7 +222,6 @@ export default {
     },
 
     async predict(input) {
-      this.playTriggersound('Angry');
       this.toggleOutput();
       const stacked = tf.stack([input, input, input]);
       const reshaped = stacked.reshape([1, 40, 261, 3]);
