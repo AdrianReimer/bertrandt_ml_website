@@ -171,9 +171,20 @@ export default {
       this.onMicDataCall([this.mfccName, this.rmsName, this.bufferName], this.show)
         .then((meydaAnalyzer) => {
           meydaAnalyzer.start();
+          Vue.prototype.meydaAnalyzer = meydaAnalyzer;
         }).catch((err) => {
           alert(err);
         });
+    },
+
+    continue() {
+      this.mfccCanvas = document.getElementById('mfcc');
+      this.mfccCtx = this.mfccCanvas.getContext('2d');
+      this.bufferCanvas = document.getElementById('buffer');
+      this.bufferCtx = this.bufferCanvas.getContext('2d');
+      Vue.prototype.meydaAnalyzer.start();
+      Vue.prototype.drawFuncIntervalId = setInterval(this.draw, 16);
+      Vue.prototype.drawFuncIsAct = true;
     },
 
     draw() {
@@ -393,14 +404,14 @@ export default {
         Vue.prototype.stopDraw = this.stopDraw;
         this.setup();
       } else {
-        Vue.prototype.drawFuncIntervalId = setInterval(this.draw, 16);
-        Vue.prototype.drawFuncIsAct = true;
+        this.continue();
       }
     },
 
     stopDraw() {
       clearInterval(Vue.prototype.drawFuncIntervalId);
       Vue.prototype.drawFuncIsAct = false;
+      Vue.prototype.meydaAnalyzer.stop();
     },
   },
   mounted() {
