@@ -16,7 +16,6 @@ export default {
   },
   data() {
     return {
-      model: NaN,
       labelDict: {
         0: 'Angry',
         1: 'Disgusted',
@@ -151,7 +150,7 @@ export default {
 
     loadModel() {
       tf.loadLayersModel('https://www.adrianreimer.com:2020/model/model.json').then((loadedModel) => {
-        this.model = loadedModel;
+        Vue.prototype.model = loadedModel;
       });
     },
 
@@ -167,7 +166,6 @@ export default {
       this.mfccCtx = this.mfccCanvas.getContext('2d');
       this.bufferCanvas = document.getElementById('buffer');
       this.bufferCtx = this.bufferCanvas.getContext('2d');
-      this.loadModel();
       // create meyda analyzer
       // and connect to mic source
       this.onMicDataCall([this.mfccName, this.rmsName, this.bufferName], this.show)
@@ -178,16 +176,6 @@ export default {
         }).catch((err) => {
           alert(err);
         });
-    },
-
-    continue() {
-      this.mfccCanvas = document.getElementById('mfcc');
-      this.mfccCtx = this.mfccCanvas.getContext('2d');
-      this.bufferCanvas = document.getElementById('buffer');
-      this.bufferCtx = this.bufferCanvas.getContext('2d');
-      this.loadModel();
-      Vue.prototype.drawFuncIntervalId = setInterval(this.draw, 16);
-      Vue.prototype.drawFuncIsAct = true;
     },
 
     draw() {
@@ -225,7 +213,7 @@ export default {
       this.toggleOutput();
       const stacked = tf.stack([input, input, input]);
       const reshaped = stacked.reshape([1, 40, 261, 3]);
-      const modelPred = this.model.predict(reshaped);
+      const modelPred = Vue.prototype.model.predict(reshaped);
       const predLabel = this.labelDict[tf.argMax(modelPred, tf.axis = 1).dataSync()];
       this.playTriggersound(predLabel);
       this.displayPred(predLabel);
@@ -403,11 +391,11 @@ export default {
 
     start() {
       if (Vue.prototype.drawFuncIsAct === undefined) {
+        this.loadModel();
         Vue.prototype.stopDraw = this.stopDraw;
         this.setup();
-      } else {
-        this.continue();
       }
+      this.setup();
     },
 
     stopDraw() {
