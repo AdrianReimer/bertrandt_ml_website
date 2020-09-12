@@ -393,7 +393,6 @@ export default {
       if (Vue.prototype.drawFuncIsAct === undefined) {
         this.loadModel();
         Vue.prototype.stopDraw = this.stopDraw;
-        this.setup();
       }
       this.setup();
     },
