@@ -167,7 +167,7 @@ export default {
       this.mfccCtx = this.mfccCanvas.getContext('2d');
       this.bufferCanvas = document.getElementById('buffer');
       this.bufferCtx = this.bufferCanvas.getContext('2d');
-      const Url = 'https://www.adrianreimer.com:1234';
+      const Url = 'https://ar-ml.herokuapp.com/predict_api';
       axios.post(Url, 22, (data, status) => {
         console.log(`${data} and status is ${status}`);
       });
