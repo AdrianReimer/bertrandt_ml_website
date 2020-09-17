@@ -8,6 +8,7 @@
 import Vue from 'vue';
 import Meyda from 'meyda';
 import * as tf from '@tensorflow/tfjs';
+import axios from 'axios';
 import TheAudio from './TheAudio.vue';
 
 export default {
@@ -166,9 +167,13 @@ export default {
       this.mfccCtx = this.mfccCanvas.getContext('2d');
       this.bufferCanvas = document.getElementById('buffer');
       this.bufferCtx = this.bufferCanvas.getContext('2d');
+      const Url = 'https://www.adrianreimer.com:1234';
+      axios.post(Url, 22, (data, status) => {
+        console.log(`${data} and status is ${status}`);
+      });
       // create meyda analyzer
       // and connect to mic source
-      this.onMicDataCall([this.mfccName, this.rmsName, this.bufferName], this.show)
+      this.onMicDataCall([this.mfccName, this.bufferName], this.show)
         .then((meydaAnalyzer) => {
           Vue.prototype.meydaAnalyzer = meydaAnalyzer;
           Vue.prototype.meydaAnalyzer.start();
