@@ -113,8 +113,8 @@ export default {
 
     draw() {
       // append new mfcc values
-      if (this.curRms > this.ThresRms) {
-        this.mfccHistory.push(this.curMfcc);
+      if (Vue.prototype.curRms > this.ThresRms) {
+        this.mfccHistory.push(Vue.prototype.curMfcc);
       } else {
         this.mfccHistory.push(this.defaultMfcc);
       }
