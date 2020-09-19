@@ -10,7 +10,7 @@
             <div id="mfccBar">
                 <div id="mfcc_mover"> MFCC </div>
                 <div class="mfcc-info" id="mfcc-info">
-                    <canvas id="mfcc" width="1305" height="200"></canvas>
+                    <canvas id="mfcc" width="650" height="200"></canvas>
                 </div>
             </div>
         </div>

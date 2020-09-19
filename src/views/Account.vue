@@ -33,11 +33,11 @@
               </ons-list-item>
               <ons-list-item>
                 <label class="center" for="switch1">
-                  Daily Emotion overview
+                  Backend prediction
                 </label>
                 <div class="right">
-                  <v-ons-switch input-id="switch1" v-model="dailyEmotionSwitchOn"
-                    @change="saveDailyEmotionSwitch">
+                  <v-ons-switch input-id="switch1" v-model="backendPredictionOn"
+                    @change="saveBackendPredictionSwitch">
                   </v-ons-switch>
                 </div>
               </ons-list-item>
@@ -66,10 +66,11 @@ import Vue from 'vue';
 export default {
   data() {
     return {
-      dailyEmotionSwitchOn: true,
+      backendPredictionOn: true,
       databaseDialogVisible: false,
       name: '',
       email: '',
+      user: '',
     };
   },
   mounted() {
@@ -80,37 +81,38 @@ export default {
     }
     // load daily emotion switch
     this.loadCurUser();
-    this.loadEmotionSwitch();
   },
   methods: {
     loadCurUser() {
       this.$pouch.get('userCur', {}, 'account').then((doc) => {
         this.name = doc.username;
         this.email = doc.email;
+        this.user = doc.name;
+        this.loadEmotionSwitch();
       }).catch((err) => {
         console.log(err);
       });
     },
 
     loadEmotionSwitch() {
-      this.$pouch.get('dailyEmotionSwitchOn', {}, 'account').then((doc) => {
-        this.dailyEmotionSwitchOn = doc.value;
+      this.$pouch.get('backendPredictionSwitchOn', {}, `${this.user}home`).then((doc) => {
+        this.backendPredictionOn = doc.value;
       }).catch((err) => {
         console.log(err);
       });
     },
 
-    saveDailyEmotionSwitch() {
-      this.$pouch.get('dailyEmotionSwitchOn', {}, 'account').then((doc) => {
-        doc.value = this.dailyEmotionSwitchOn;
-        return this.$pouch.put(doc, {}, 'account');
+    saveBackendPredictionSwitch() {
+      this.$pouch.get('backendPredictionSwitchOn', {}, `${this.user}home`).then((doc) => {
+        doc.value = this.backendPredictionOn;
+        return this.$pouch.put(doc, {}, `${this.user}home`);
       }).catch(() => {
         const doc = {
-          _id: 'dailyEmotionSwitchOn',
-          value: this.dailyEmotionSwitchOn,
+          _id: 'backendPredictionSwitchOn',
+          value: this.backendPredictionOn,
         };
-        this.$pouch.put(doc, {}, 'account').then(() => {
-          console.log('Daily emotion switch saved');
+        this.$pouch.put(doc, {}, `${this.user}home`).then(() => {
+          console.log('backend prediction activated');
         }).catch((err) => {
           console.log(err);
         });

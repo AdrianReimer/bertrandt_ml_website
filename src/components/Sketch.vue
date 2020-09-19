@@ -6,7 +6,6 @@
 
 <script>
 import Vue from 'vue';
-import Meyda from 'meyda';
 import * as tf from '@tensorflow/tfjs';
 import axios from 'axios';
 import TheAudio from './TheAudio.vue';
@@ -28,9 +27,6 @@ export default {
         7: 'Calm',
       },
       mfccVal: new Array(261),
-      mfccName: 'mfcc',
-      rmsName: 'rms',
-      bufferName: 'buffer',
       ThresRms: 0.001,
       mfccHistMaxLen: 261,
       boxWidth: 5,
@@ -53,55 +49,6 @@ export default {
     };
   },
   methods: {
-    /*
-    get new audio
-    context object
-    */
-    createAudioCtx() {
-      const AudioContext = window.AudioContext || window.webkitAudioContext;
-      return new AudioContext();
-    },
-
-    /*
-    create microphone
-    audio input source from
-    audio context
-    */
-    createMicSrcFrom(audioCtx) {
-      return new Promise((resolve, reject) => {
-        const constraints = { audio: true, video: false };
-        navigator.mediaDevices.getUserMedia(constraints)
-          .then((stream) => {
-            const src = audioCtx.createMediaStreamSource(stream);
-            resolve(src);
-          }).catch((err) => { reject(err); });
-      });
-    },
-
-    /*
-    call given function
-    on new microphone analyser
-    data
-    */
-    onMicDataCall(features, callback) {
-      return new Promise((resolve, reject) => {
-        const audioCtx = this.createAudioCtx();
-        this.createMicSrcFrom(audioCtx)
-          .then((src) => {
-            const analyzer = Meyda.createMeydaAnalyzer({
-              audioContext: audioCtx,
-              source: src,
-              bufferSize: 512,
-              featureExtractors: features,
-              callback,
-              numberOfMFCCCoefficients: 40,
-            });
-            resolve(analyzer);
-          }).catch((err) => {
-            reject(err);
-          });
-      });
-    },
 
     plot_mfcc() {
       if (this.mfccHistory.length) {
@@ -155,36 +102,11 @@ export default {
       });
     },
 
-    show(features) {
-      // update spectral data size
-      this.curMfcc = features[this.mfccName];
-      this.curRms = features[this.rmsName];
-      this.curBuffer = features[this.bufferName];
-    },
-
     setup() {
       this.mfccCanvas = document.getElementById('mfcc');
       this.mfccCtx = this.mfccCanvas.getContext('2d');
       this.bufferCanvas = document.getElementById('buffer');
       this.bufferCtx = this.bufferCanvas.getContext('2d');
-      // create meyda analyzer
-      // and connect to mic source
-      this.onMicDataCall([this.mfccName, this.bufferName], this.show)
-        .then((meydaAnalyzer) => {
-          Vue.prototype.meydaAnalyzer = meydaAnalyzer;
-          Vue.prototype.meydaAnalyzer.start();
-        }).catch((err) => {
-          alert(err);
-        });
-    },
-
-    continue() {
-      this.mfccCanvas = document.getElementById('mfcc');
-      this.mfccCtx = this.mfccCanvas.getContext('2d');
-      this.bufferCanvas = document.getElementById('buffer');
-      this.bufferCtx = this.bufferCanvas.getContext('2d');
-      console.log(Vue.prototype.meydaAnalyzer);
-      Vue.prototype.meydaAnalyzer.start();
       Vue.prototype.drawFuncIntervalId = setInterval(this.draw, 16);
       Vue.prototype.drawFuncIsAct = true;
     },
@@ -224,15 +146,38 @@ export default {
       this.toggleOutput();
       const stacked = tf.stack([input, input, input]);
       const reshaped = stacked.reshape([1, 40, 130, 3]).arraySync();
+      this.$pouch.get('userCur', {}, 'account').then((user) => {
+        this.$pouch.get('backendPredictionSwitchOn', {}, `${user.name}home`).then((doc) => {
+          if (doc.value === true) {
+            this.backendPrediction(reshaped);
+          } else {
+            this.frontendPrediction(reshaped);
+          }
+        }).catch(() => {
+          this.backendPrediction(reshaped);
+        });
+      }).catch((err) => {
+        console.log(err);
+      });
+    },
+
+    async frontendPrediction(mfcc) {
+      const modelPred = Vue.prototype.model.predict(mfcc);
+      const predLabel = this.labelDict[tf.argMax(modelPred, tf.axis = 1).dataSync()];
+      this.postPrediction(predLabel);
+    },
+
+    async backendPrediction(mfcc) {
       const Url = 'https://adr-ml.herokuapp.com/predict_api';
-      axios.post(Url, reshaped)
-        .then((response) => console.log(response));
-      // const modelPred = Vue.prototype.model.predict(reshaped);
-      // const predLabel = this.labelDict[tf.argMax(modelPred, tf.axis = 1).dataSync()];
-      // this.playTriggersound(predLabel);
-      // this.displayPred(predLabel);
-      // this.toggleOutput();
-      // this.savePrediction(predLabel);
+      axios.post(Url, mfcc)
+        .then((response) => this.postPrediction(response.data));
+    },
+
+    async postPrediction(predLabel) {
+      this.playTriggersound(predLabel);
+      this.displayPred(predLabel);
+      this.toggleOutput();
+      this.savePrediction(predLabel);
     },
 
     savePrediction(predLabel) {
@@ -406,11 +351,9 @@ export default {
     start() {
       if (Vue.prototype.drawFuncIsAct === undefined) {
         this.loadModel();
-        Vue.prototype.stopDraw = this.stopDraw;
-        this.setup();
-      } else {
-        this.continue();
       }
+      Vue.prototype.stopDraw = this.stopDraw;
+      this.setup();
     },
 
     stopDraw() {
