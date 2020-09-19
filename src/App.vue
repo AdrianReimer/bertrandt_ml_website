@@ -32,10 +32,9 @@ export default {
   mounted() {
     // create meyda analyzer
     // and connect to mic source
-    this.onMicDataCall(['mfcc', 'buffer'], this.show)
+    this.onMicDataCall(['mfcc', 'rms', 'buffer'], this.show)
       .then((meydaAnalyzer) => {
-        Vue.prototype.meydaAnalyzer = meydaAnalyzer;
-        Vue.prototype.meydaAnalyzer.start();
+        meydaAnalyzer.start();
       }).catch((err) => {
         alert(err);
       });
@@ -92,6 +91,7 @@ export default {
     },
 
     show(features) {
+      console.log(features[this.mfccName]);
       // update spectral data size
       Vue.prototype.curMfcc = features[this.mfccName];
       Vue.prototype.curRms = features[this.rmsName];
