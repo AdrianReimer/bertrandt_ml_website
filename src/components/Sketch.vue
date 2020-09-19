@@ -167,10 +167,6 @@ export default {
       this.mfccCtx = this.mfccCanvas.getContext('2d');
       this.bufferCanvas = document.getElementById('buffer');
       this.bufferCtx = this.bufferCanvas.getContext('2d');
-      const Url = 'https://ar-ml.herokuapp.com/predict_api';
-      axios.post(Url, 22, (data, status) => {
-        console.log(`${data} and status is ${status}`);
-      });
       // create meyda analyzer
       // and connect to mic source
       this.onMicDataCall([this.mfccName, this.bufferName], this.show)
@@ -206,7 +202,7 @@ export default {
       } else {
         this.plot_mfcc();
       }
-      if (this.mfccHistory.length === this.mfccHistMaxLen) {
+      if (this.mfccHistory.length === 130) {
         // predict output
         this.predict(this.mfccHistory.slice());
         this.mfccHistory = [];
@@ -227,13 +223,16 @@ export default {
     async predict(input) {
       this.toggleOutput();
       const stacked = tf.stack([input, input, input]);
-      const reshaped = stacked.reshape([1, 40, 261, 3]);
-      const modelPred = Vue.prototype.model.predict(reshaped);
-      const predLabel = this.labelDict[tf.argMax(modelPred, tf.axis = 1).dataSync()];
-      this.playTriggersound(predLabel);
-      this.displayPred(predLabel);
-      this.toggleOutput();
-      this.savePrediction(predLabel);
+      const reshaped = stacked.reshape([1, 40, 130, 3]).arraySync();
+      const Url = 'https://adr-ml.herokuapp.com/predict_api';
+      axios.post(Url, reshaped)
+        .then((response) => console.log(response));
+      // const modelPred = Vue.prototype.model.predict(reshaped);
+      // const predLabel = this.labelDict[tf.argMax(modelPred, tf.axis = 1).dataSync()];
+      // this.playTriggersound(predLabel);
+      // this.displayPred(predLabel);
+      // this.toggleOutput();
+      // this.savePrediction(predLabel);
     },
 
     savePrediction(predLabel) {
