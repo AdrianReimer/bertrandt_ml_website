@@ -163,14 +163,16 @@ export default {
       });
     },
 
-    async frontendPrediction(mfcc) {
+    frontendPrediction(mfcc) {
+      console.log(mfcc);
+      console.log(this.model);
       const modelPred = this.model.predict(mfcc);
       console.log(modelPred);
       const predLabel = this.labelDict[tf.argMax(modelPred, tf.axis = 1).dataSync()];
       this.postPrediction(predLabel);
     },
 
-    async backendPrediction(mfcc) {
+    backendPrediction(mfcc) {
       const Url = 'https://adr-ml.herokuapp.com/predict_api';
       axios.post(Url, mfcc)
         .then((response) => this.postPrediction(response.data));
