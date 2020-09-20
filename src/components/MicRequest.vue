@@ -5,22 +5,13 @@
 
 <script>
 import Vue from 'vue';
-import * as tf from '@tensorflow/tfjs';
 import Meyda from 'meyda';
 
 export default {
   mounted() {
     this.init();
-    this.loadModel();
   },
   methods: {
-    loadModel() {
-      tf.loadLayersModel('https://www.adrianreimer.com:2020/model/model.json').then((loadedModel) => {
-        console.log('load model');
-        Vue.prototype.model = loadedModel;
-      });
-    },
-
     /*
     get new audio
     context object

@@ -26,6 +26,7 @@ export default {
         6: 'Surprised',
         7: 'Calm',
       },
+      model: 0,
       mfccVal: new Array(261),
       ThresRms: 0.001,
       mfccHistMaxLen: 261,
@@ -96,6 +97,13 @@ export default {
       }
     },
 
+    loadModel() {
+      tf.loadLayersModel('https://www.adrianreimer.com:2020/model/model.json').then((loadedModel) => {
+        console.log('load model');
+        this.model = loadedModel;
+      });
+    },
+
     setup() {
       this.mfccCanvas = document.getElementById('mfcc');
       this.mfccCtx = this.mfccCanvas.getContext('2d');
@@ -156,9 +164,7 @@ export default {
     },
 
     async frontendPrediction(mfcc) {
-      console.log(mfcc);
-      console.log(Vue.prototype.model);
-      const modelPred = Vue.prototype.model.predict(mfcc);
+      const modelPred = this.model.predict(mfcc);
       console.log(modelPred);
       const predLabel = this.labelDict[tf.argMax(modelPred, tf.axis = 1).dataSync()];
       this.postPrediction(predLabel);
@@ -346,6 +352,7 @@ export default {
     },
 
     start() {
+      this.loadModel();
       Vue.prototype.stopDraw = this.stopDraw;
       this.setup();
     },
