@@ -96,12 +96,6 @@ export default {
       }
     },
 
-    loadModel() {
-      tf.loadLayersModel('https://www.adrianreimer.com:2020/model/model.json').then((loadedModel) => {
-        Vue.prototype.model = loadedModel;
-      });
-    },
-
     setup() {
       this.mfccCanvas = document.getElementById('mfcc');
       this.mfccCtx = this.mfccCanvas.getContext('2d');
@@ -350,9 +344,6 @@ export default {
     },
 
     start() {
-      if (Vue.prototype.drawFuncIsAct === undefined) {
-        this.loadModel();
-      }
       Vue.prototype.stopDraw = this.stopDraw;
       this.setup();
     },
