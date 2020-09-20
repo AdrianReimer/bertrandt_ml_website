@@ -163,6 +163,7 @@ export default {
 
     async frontendPrediction(mfcc) {
       const modelPred = Vue.prototype.model.predict(mfcc);
+      console.log(modelPred);
       const predLabel = this.labelDict[tf.argMax(modelPred, tf.axis = 1).dataSync()];
       this.postPrediction(predLabel);
     },
