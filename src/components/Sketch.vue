@@ -166,10 +166,10 @@ export default {
     frontendPrediction(mfcc) {
       console.log(mfcc);
       console.log(this.model);
-      const modelPred = this.model.predict(mfcc);
-      console.log(modelPred);
-      const predLabel = this.labelDict[tf.argMax(modelPred, tf.axis = 1).dataSync()];
-      this.postPrediction(predLabel);
+      // const modelPred = this.model.predict(mfcc);
+      console.log(this.model.predict(mfcc));
+      // const predLabel = this.labelDict[tf.argMax(modelPred, tf.axis = 1).dataSync()];
+      // this.postPrediction(predLabel);
     },
 
     backendPrediction(mfcc) {
