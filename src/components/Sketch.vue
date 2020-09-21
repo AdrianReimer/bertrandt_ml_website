@@ -99,7 +99,6 @@ export default {
 
     loadModel() {
       tf.loadLayersModel('https://www.adrianreimer.com:2020/model/model.json').then((loadedModel) => {
-        console.log('load model');
         this.model = loadedModel;
       });
     },
@@ -164,12 +163,11 @@ export default {
     },
 
     frontendPrediction(mfcc) {
-      console.log(mfcc);
-      console.log(this.model);
-      // const modelPred = this.model.predict(mfcc);
-      console.log(this.model.predict(mfcc));
-      // const predLabel = this.labelDict[tf.argMax(modelPred, tf.axis = 1).dataSync()];
-      // this.postPrediction(predLabel);
+      console.time('frontendPrediction');
+      const modelPred = this.model.predict(mfcc);
+      console.timeEnd('frontendPrediction');
+      const predLabel = this.labelDict[tf.argMax(modelPred, tf.axis = 1).dataSync()];
+      this.postPrediction(predLabel);
     },
 
     backendPrediction(mfcc) {
