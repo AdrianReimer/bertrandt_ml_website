@@ -163,9 +163,7 @@ export default {
     },
 
     frontendPrediction(mfcc) {
-      console.time('frontendPrediction');
       const modelPred = this.model.predict(mfcc);
-      console.timeEnd('frontendPrediction');
       const predLabel = this.labelDict[tf.argMax(modelPred, tf.axis = 1).dataSync()];
       this.postPrediction(predLabel);
     },
@@ -353,7 +351,6 @@ export default {
 
     start() {
       this.loadModel();
-      Vue.prototype.stopDraw = this.stopDraw;
       this.setup();
     },
 
@@ -363,7 +360,10 @@ export default {
     },
   },
   mounted() {
-    this.start();
+    Vue.prototype.start = this.start;
+    Vue.prototype.stopDraw = this.stopDraw;
+    console.log(Vue.prototype.start);
+    this.stopDraw();
   },
 };
 </script>

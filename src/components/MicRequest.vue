@@ -18,7 +18,8 @@ export default {
     */
     createAudioCtx() {
       const AudioContext = window.AudioContext || window.webkitAudioContext;
-      return new AudioContext();
+      Vue.prototype.audioCtx = new AudioContext();
+      return Vue.prototype.audioCtx;
     },
 
     /*
