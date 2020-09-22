@@ -29,7 +29,7 @@ export default {
       model: 0,
       mfccVal: new Array(261),
       ThresRms: 0.001,
-      mfccHistMaxLen: 261,
+      mfccHistMaxLen: 130,
       boxWidth: 5,
       boxHeight: 5,
       redColor: 150,
@@ -115,7 +115,7 @@ export default {
     draw() {
       // append new mfcc values
       if (Vue.prototype.curRms > this.ThresRms) {
-        this.mfccHistory.push(Vue.prototype.curMfcc);
+        this.mfccHistory.push(Vue.prototype.curMfcc.reverse());
       } else {
         this.mfccHistory.push(this.defaultMfcc);
       }
@@ -125,7 +125,7 @@ export default {
       } else {
         this.plot_mfcc();
       }
-      if (this.mfccHistory.length === 130) {
+      if (this.mfccHistory.length === this.mfccHistMaxLen) {
         // predict output
         this.predict(this.mfccHistory.slice());
         this.mfccHistory = [];

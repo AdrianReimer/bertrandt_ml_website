@@ -39,7 +39,6 @@ export default {
     },
 
     show(features) {
-      console.log('blaaa');
       // update spectral data size
       Vue.prototype.curMfcc = features.mfcc;
       Vue.prototype.curRms = features.rms;
