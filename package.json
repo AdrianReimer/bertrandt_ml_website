@@ -11,7 +11,7 @@
   "dependencies": {
     "@tensorflow/tfjs": "^2.3.0",
     "ajax": "0.0.4",
-    "axios": "^0.20.0",
+    "axios": "^0.21.1",
     "chart.js": "^2.9.3",
     "core-js": "^3.6.5",
     "meyda": "^5.0.3",
