@@ -1,4 +1,18 @@
-# website
+# PWA for Speech Emotion Recognition
+
+A Progressive Web Application built with VueJS that takes microphone input and produces a prediction of the users emotion.
+
+
+
+## What I've learned
+
+* Javascript
+* VueJS
+* PouchDB
+* Ajax
+* TensorflowJS
+* Meyda
+* DL with Audio
 
 ## Project setup
 ```
